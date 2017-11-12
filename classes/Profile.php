@@ -3,21 +3,114 @@
 
 class Profile{
 
-    public static function getPosts($profile_id,$mysqli){
+    private $profile_id;
+    private $mysqli;
+    private $first_name;
+    private $last_name;
+    private $prof_image;
+    private $isOwnProfile;
 
-      $posts=$mysqli->query("select * from t_posts join t_users on t_posts.user_id=t_users.id where user_id=$profile_id");
+    public function __construct($_profile_id,$conn,$isOwnProfile){
+
+        $this->profile_id=$_profile_id;
+        $this->mysqli=$conn;
+        $this->isOwnProfile=$isOwnProfile;
+    }
+
+    public function getUserData(){
+
+         $result=$this->mysqli->query("select * from t_users where id=$this->profile_id");
+
+         if($result->num_rows==0){
+             Reporter::report_err("This page isn't available.The link you followed may be broken, or the page may have been removed.");
+         }else{
+         $user=$result->fetch_assoc();
+         
+         $this->first_name=ucfirst($user['first_name']);
+         $this->last_name=ucfirst($user['last_name']);
+         $this->prof_image=$user['prof_image'];
+
+
+         $sidebar_html=($this->prof_image!=null ?
+                    '<div class="profile-photo">
+                    <img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" height="100px" width="100px">			
+                    </div>':'').'
+                    <div class="description">
+                <p>'.$this->first_name.' '.$this->last_name.'</p>
+                        <p>Proffesion:Software Engeenier</p>
+                        <p>About me:<br>
+                        I am a code lover, i like to code!</p>
+                    </div>'.($this->isOwnProfile ? 
+                    '<div class="Actions">
+                            Actions:
+                                <p><button>Create a new Group</button></p>
+                                <br>
+                                <p>
+                                <button class="btn" data-popup-open="popup-1" href="#">Join Existing Groups</button>
+                                </p>
+                            </div>':'').'
+                    <div class="Created_groups">
+                        Created Groups:
+                        <ul>
+                        <li>
+                            <p><span><i class="fa fa-group" aria-hidden="true"></i></span>
+                            Node Js</p>
+                        </li>
+                        <li>
+                            <p><span><i class="fa fa-group" aria-hidden="true"></i></span>
+                            Angular Js</p>
+                        </li>
+                        <li>
+                            <p><span><i class="fa fa-group" aria-hidden="true"></i></span>
+                            React Js</p>
+                        </li>
+                        </ul>
+                    </div>
+                            <div class="Groups_in">
+                        Member of:
+                <ul>
+                    <li>
+                    <p><span><i class="fa fa-group" aria-hidden="true"></i></span>
+                    Node Js</p>
+                    </li>
+                    <li>
+                    <p><span><i class="fa fa-group" aria-hidden="true"></i></span>
+                    Angular Js</p>
+                    </li>
+                    <li>
+                    <p><span><i class="fa fa-group" aria-hidden="true"></i></span>
+                    React Js</p>
+                    </li>
+                </ul>
+                </div>
+            ';
+        echo $sidebar_html;
+         }
+    }
+
+    public function getPosts(){
+
+      $posts=$this->mysqli->query("select * from t_posts where user_id=$this->profile_id");
     
-      $posts_html='';
+      $posts_html=($this->isOwnProfile ? '<div class="card">
+			<div class="create_post">
+			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Create a Post</p>
+			</div>
+			<p><textarea class="new_post" rows="4" placeholder="What\'s on your mind?"></textarea></p>
+                    <span><i class="fa fa-lg fa-camera-retro" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-lg fa-youtube-play" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-code fa-lg" aria-hidden="true"></i></span>
+            <button id="post_btn"><a href="#">Post</a></button></div>':'').'<div class="Posted_posts">';
       if($posts->num_rows>0){
       while($post=mysqli_fetch_array($posts)){
 
-          $posts_html .= '<div class="card">'
-          .($post['image']!=null ?
-          '<img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-profile profile_picture">':'').'
-          <a href="#" class="user">'.ucfirst($post['first_name']).' '.ucfirst($post['last_name']).'</a>'
+          $posts_html .='<div class="card">'
+          .($this->prof_image!=null ?
+          '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" class="img-profile profile_picture">':'').'
+          <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
           .($post['group_name']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
-          </p><a href="#" class="time">'.Profile::time_elapsed_string($post['post_date']).'</a>
+          </p><a href="#" class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
           <p>'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').'
           <div class="footer">
@@ -48,16 +141,42 @@ class Profile{
               </div>
             </div>
           </div>
-    	</div>
-        ';
+    	</div>';
         }
       }
-      echo $posts_html;
+      echo $posts_html.'</div>';
+    }
+
+    public function getRightSidebar(){
+        $rightSidebar_html=($this->isOwnProfile ? '':'<div class="right_sidebar_ads">
+
+            </div>
+            <div class="social no-bg">
+            Connect on other platforms:<br>
+        <a class="linkedin">
+            <svg viewBox="0 0 800 800">
+            <path d="M268 629h-97V319h97zm157 0h-97V319h93v42h1q31-50 93-50 114 0 114 133v185h-96V466q0-70-49-70-59 0-59 69z" />
+            <circle cx="219" cy="220" r="56"/>
+            </svg>
+        </a>
+        <a class="round github">
+            <svg viewBox="0 0 800 800">
+            <path d="M400 139c144 0 260 116 260 260 0 115-75 213-178 247-9 3-17-2-17-13v-71c0-35-18-48-18-48 57-6 119-28 119-128 0-44-27-70-27-70s14-29-2-69c0 0-22-7-72 27-42-12-88-12-130 0-50-34-72-27-72-27-16 40-2 69-2 69s-27 26-27 70c0 100 62 122 119 128 0 0-14 10-17 35-15 7-53 18-76-22 0 0-13-25-39-27 0 0-26 0-2 16 0 0 17 8 29 38 0 0 16 51 88 35v44c0 11-9 16-18 13-103-34-178-132-178-247 0-144 116-260 260-260z"/>
+            </svg>
+        </a>
+        <a class="round codepen">
+            <svg viewBox="0 0 800 800">
+            <path d="M140 482V320q0-10 10-18l238-158q12-8 24 0l238 158q9 6 10 19v158q0 10-10 19L412 656q-12 8-24 0L150 497q-9-6-10-15zm282-278v104l97 65 78-52zm-44 104V204L203 321l78 52zm-193 54v75l56-37zm193 234V492l-97-65-78 52zm22-143l79-53-79-53-79 53zm22 143l175-117-78-52-97 64v105zm193-159v-75l-56 38z"/>
+            </svg>
+        </a>
+            </div>');
+        
+            echo $rightSidebar_html;
     }
 
 
 
-    public static function time_elapsed_string($datetime, $full = false) {
+    public function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
     $diff = $now->diff($ago);

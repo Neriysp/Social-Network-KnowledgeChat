@@ -5,7 +5,7 @@ require 'classes/Login.php';
 require 'classes/Reporter.php';
 
 if($user_id=Login::isLoggedIn($mysqli)){
-  header("location:profile.php");
+  header("location:profile.php?user=$user_id");
 }
 
 ?>

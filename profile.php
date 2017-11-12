@@ -30,18 +30,22 @@ if(isset($_GET['user']) && !empty($_GET['user'])){
     else{
       $isOwnProfile=false;
     }
-  }
+    $UserProfile= new Profile($profile_id,$mysqli,$isOwnProfile);
+
+    if(!$active){
+      include 'profileNactive.php';
+    }
+    else{
+     include 'realProfile.php';
+    }
+ }
+
 }
 else{
   header("location:profile.php?user=$user_id");
+
 }
 
-if(!$active){
-  include 'profileNactive.php';
-}
-else{
-  include 'realProfile.php';
-}
 ?>
 
 
