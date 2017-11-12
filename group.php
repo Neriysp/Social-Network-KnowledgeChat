@@ -351,7 +351,6 @@
   			</p>
   			<a href="#" class="time">9 hrs</a>
   			<p>Accidental Samoa and other clichés</p>
-  			<img src="download.gif" class="img-primary">
   			<div class="footer">
    			 <div class="controls">
              <a href="#" class="like">

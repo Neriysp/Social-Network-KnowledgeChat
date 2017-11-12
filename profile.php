@@ -2,6 +2,7 @@
 require 'db.php';
 require_once 'classes/Login.php';
 require_once 'classes/Reporter.php';
+require 'classes/Profile.php';
 
 if(!$user_id=Login::isLoggedIn($mysqli)){
   //Rasti kur kerkon profilin nga url direkt pa bere login
@@ -30,6 +31,9 @@ if(isset($_GET['user']) && !empty($_GET['user'])){
       $isOwnProfile=false;
     }
   }
+}
+else{
+  header("location:profile.php?user=$user_id");
 }
 
 if(!$active){

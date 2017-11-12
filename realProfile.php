@@ -98,47 +98,11 @@
 			<button id="post_btn"><a href="#">Post</a></button>
 		</div>
 		<div class="Posted_posts">
-	<div class="card">
-  		<img src="download.gif" class="img-profile profile_picture">
-  			<p class="who">
-    		<a href="#" class="user">Ben Durra</a> on
-    		<a href="#" class="friend">HTML5</a> group.
-  			</p>
-  			<a href="#" class="time">9 hrs</a>
-  			<p>Accidental Samoa and other clichés</p>
-  			<img src="download.gif" class="img-primary">
-  			<div class="footer">
-   			 <div class="controls">
-             <a href="#" class="like">
-                <i class="fa fa-thumbs-up" style="margin-right: 5px;" aria-hidden="true"></i>Like</a>
-             <a href="#" class="comment">
-                <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
-             <a href="#" class="share">
-                <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
-            </div>
-           <div class="new_comment">
-              <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-              <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
-            </div>
-            <div class="comments_w">
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!</div>
-              </div>
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!</div>
-              </div>
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!</div>
-              </div>
-            </div>
- 		 </div>
-	</div>
+      <?php
+        Profile::getPosts($profile_id,$mysqli);
+      ?>
 		</div>
 		</div>
-
 	<div class="right-sidebar box">
     <div class="right_sidebar_ads">
 
