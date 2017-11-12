@@ -1,0 +1,303 @@
+.card span {
+    padding: 5px;
+}
+
+.post {
+    background-color: white;
+    color: black;
+    padding: 10px;
+    font-size: 150%;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.sidebar {
+    background-color: white;
+    grid-area: sidebar;
+    margin-left: 5%;
+}
+
+.description {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.description p {
+    border: 1px solid purple;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.posts {
+    grid-area: posts;
+    border: 1px solid purple;
+    border-radius: 15%;
+    display: grid;
+    grid-template-areas: "new_post" "posted_posts";
+}
+
+.Posted_posts {
+    grid-area: posted_posts;
+}
+
+.New_post {
+    grid-area: new_post;
+}
+
+.right-sidebar {
+    grid-area: right-sidebar;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 15px;
+    grid-template-areas: "navbar navbar navbar" "sidebar posts right-sidebar";
+    background-color: #fff;
+    color: #444;
+    background-color: #fff;
+    color: #444;
+}
+
+.card {
+    background-color: #fff;
+    width: 500px;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    padding: 12px 12px 0;
+    margin-bottom: 20px;
+    margin-left: 25%;
+    margin-right: 25%;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 3px;
+}
+
+.new_post {
+    background-color: #fff;
+    width: 95%;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 12px 12px 0;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 3px;
+    resize: none;
+}
+
+.new_comment_area {
+    background-color: #fff;
+    width: 80%;
+    height: 25px;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 12px;
+    padding-top: 8px;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 30px;
+    resize: none;
+}
+
+.new_comment {
+    margin-top: 5px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.comment_child {
+    margin-top: 5px;
+}
+
+.output {
+    width: 85%;
+    display: inline-block;
+    border-bottom: 1px solid #e5e5e5;
+    padding-top: 15px;
+    padding-bottom: 25px;
+}
+
+.create_post {
+    border-bottom: 1px solid gray;
+    font-size: 120%;
+}
+
+#post_btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.img-profile {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    float: left;
+}
+
+.who {
+    color: #90949c;
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+.user {
+    font-weight: bold;
+    color: #365899;
+    text-decoration: none;
+}
+
+.friend {
+    color: #365899;
+    text-decoration: none;
+}
+
+.time {
+    color: #90949c;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.user:hover,
+.friend:hover,
+.time:hover {
+    text-decoration: underline;
+}
+
+.img-primary {
+    width: 100%;
+    height: 357px;
+}
+
+.footer {
+    margin-top: 12px;
+    padding-bottom: 4px;
+}
+
+.controls {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    padding-top: 4px;
+}
+
+.like,
+.comment,
+.share {
+    color: #7f7f7f;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    margin-right: 20px;
+    padding: 4px 4px 4px 0;
+    text-decoration: none;
+}
+
+.like:hover,
+.comment:hover,
+.share:hover {
+    text-decoration: underline;
+}
+
+
+/*Per figurat sociale*/
+
+.social a {
+    margin: 0.6rem;
+    -webkit-transition: 0.5s ease;
+    transition: 0.5s ease;
+    height: 15vw;
+    width: 15vw;
+    max-width: 6rem;
+    max-height: 6rem;
+    display: inline-block;
+}
+
+.social a:hover {
+    cursor: pointer;
+}
+
+.social a svg {
+    height: 50%;
+    width: 50%;
+    fill: white;
+}
+
+.social .badges a {
+    border-radius: 1rem;
+}
+
+.round {
+    border-radius: 50%;
+}
+
+.rounded {
+    border-radius: 20%;
+}
+
+.codepen {
+    background: #383940;
+}
+
+.codepen:focus,
+.codepen:hover {
+    background: #202125;
+}
+
+.github {
+    background: #383940;
+}
+
+.github:focus,
+.github:hover {
+    background: #202125;
+}
+
+.linkedin {
+    background: #007bb6;
+}
+
+.linkedin:focus,
+.linkedin:hover {
+    background: #005983;
+}
+
+.no-bg a {
+    background-color: transparent !important;
+    margin: 0;
+}
+
+.no-bg .codepen svg {
+    fill: #383940;
+}
+
+.no-bg .codepen:focus svg,
+.no-bg .codepen:hover svg {
+    fill: #202125;
+}
+
+.no-bg .github svg {
+    fill: #202125;
+}
+
+.no-bg .github:focus svg,
+.no-bg .github:hover svg {
+    fill: #202125;
+}
+
+.no-bg .linkedin svg {
+    fill: #007bb6;
+}
+
+.no-bg .linkedin:focus svg,
+.no-bg .linkedin:hover svg {
+    fill: #005983;
+}
+
+
+/*Mbarojne figurat sociale*/
