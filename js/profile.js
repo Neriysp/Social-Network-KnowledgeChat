@@ -36,3 +36,48 @@ function FilerGrid() {
         }
     }
 }
+
+$('#new_post_form').submit(function(event) {
+    event.preventDefault();
+    var image_name = $('#image').val();
+    if (image_name == '') {
+        var extension = null;
+    } else {
+        var extension = $('#image').val().split('.').pop().toLowerCase();
+        if (jQuery.inArray(extension, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+            alert("Invalid Image File");
+            $('#image').val('');
+            return false;
+        }
+    }
+    $.ajax({
+        url: "ajaxProfile.php",
+        method: "POST",
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            var arr = JSON.parse(data);
+            if (arr.length == 2) {
+                var imgsrc = arr[1];
+                if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
+                    $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
+                } else {
+                    $("<img src='' class='img-primary'>").insertAfter(".body");
+                }
+                $('div.Posted_posts div.card:first-child img.img-primary').attr("src", imgsrc);
+            } else {
+                $addedHtml = $('div.Posted_posts div.card:first-child').html();
+
+                $(".hello").remove();
+            }
+            var body = arr[0];
+            $('#new_post_form')[0].reset();
+            $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
+            $('div.Posted_posts div.card:first-child p').html(body);
+            //duhet qe te shtosh nje te re si kjo ne fillim duke zvendesuar vtm ato qe merr nga callback-u;
+            //$('div.Posted_posts div.card:first-child').html();
+        }
+    });
+
+});

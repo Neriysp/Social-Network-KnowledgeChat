@@ -32,7 +32,7 @@
 .posts {
     grid-area: posts;
     border: 1px solid purple;
-    border-radius: 15%;
+    border-radius: 100px;
     display: grid;
     grid-template-areas: "new_post" "posted_posts";
 }
@@ -127,7 +127,7 @@
     font-size: 120%;
 }
 
-#post_btn {
+.post_btn {
     margin-top: 10px;
     margin-bottom: 10px;
     float: right;
@@ -279,6 +279,30 @@
 .no-bg .codepen:focus svg,
 .no-bg .codepen:hover svg {
     fill: #202125;
+}
+
+#insert {
+    background-color: #714cac;
+    border: none;
+    padding: 9px;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+#insert:hover {
+    cursor: pointer;
+    background: #492e72;
+}
+
+#insert:active {
+    cursor: pointer;
+    background: #000;
 }
 
 .no-bg .github svg {

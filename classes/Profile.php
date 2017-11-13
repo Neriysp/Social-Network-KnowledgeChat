@@ -90,17 +90,27 @@ class Profile{
 
     public function getPosts(){
 
-      $posts=$this->mysqli->query("select * from t_posts where user_id=$this->profile_id");
+      $posts=$this->mysqli->query("select * from t_posts where user_id=$this->profile_id ORDER BY id DESC");
     
       $posts_html=($this->isOwnProfile ? '<div class="card">
 			<div class="create_post">
 			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Create a Post</p>
 			</div>
-			<p><textarea class="new_post" rows="4" placeholder="What\'s on your mind?"></textarea></p>
-                    <span><i class="fa fa-lg fa-camera-retro" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-lg fa-youtube-play" aria-hidden="true"></i></span>
+			<form id="new_post_form" method="post" enctype="multipart/form-data">
+			<p><textarea name="body_post" class="new_post" rows="4" placeholder="What\'s on your mind?"></textarea></p>
+                    <span>
+                      <label for="image" class="btn"><i class="fa fa-lg fa-camera-retro" aria-hidden="true"></i>
+                    </label>
+                      <input type="file" style="display:none;" name="image" id="image" />
+                    </span>
+                    <input type="hidden" name="action" id="action" value="insert" />
+                    <span><i class="fa fa-lg fa-youtube-play" aria-hidden="true">
+                    </i>
+                    </span>
                     <span><i class="fa fa-code fa-lg" aria-hidden="true"></i></span>
-            <button id="post_btn"><a href="#">Post</a></button></div>':'').'<div class="Posted_posts">';
+			        <input type="submit" class="post_btn" name="insert" id="insert" value="Post"/>
+      </form>
+            </div>':'').'<div class="Posted_posts">';
       if($posts->num_rows>0){
       while($post=mysqli_fetch_array($posts)){
 
@@ -110,8 +120,8 @@ class Profile{
           <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
           .($post['group_name']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
-          </p><a href="#" class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
-          <p>'.$post['body'].'</p>'.($post['image']!=null ?'
+          <a href="#" class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
+          <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').'
           <div class="footer">
    			 <div class="controls">
