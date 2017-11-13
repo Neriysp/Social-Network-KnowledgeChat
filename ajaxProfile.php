@@ -14,7 +14,7 @@ if(isset($_POST["action"]))
         {
             $mysqli->query("Insert into T_posts(body,user_id,post_date) values('$body',$user_id,now())");
             
-            echo json_encode($body);
+            echo json_encode([$body]);
         }
         else {
             // if(file_get_contents($_FILES["image"]["tmp_name"])!= strip_tags(file_get_contents($_FILES["image"]["tmp_name"]))){

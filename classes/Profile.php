@@ -120,7 +120,7 @@ class Profile{
           <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
           .($post['group_name']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
-          <a href="#" class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
+          <a  class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').'
           <div class="footer">

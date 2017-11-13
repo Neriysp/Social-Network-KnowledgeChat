@@ -63,20 +63,21 @@ $('#new_post_form').submit(function(event) {
                 if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
                     $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
                 } else {
-                    $("<img src='' class='img-primary'>").insertAfter(".body");
+                    $("<img src='' class='img-primary' style='display:none;'>").insertAfter(".body");
+                    $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
                 }
+                $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'block');
                 $('div.Posted_posts div.card:first-child img.img-primary').attr("src", imgsrc);
             } else {
-                $addedHtml = $('div.Posted_posts div.card:first-child').html();
-
-                $(".hello").remove();
+                $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
+                if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
+                    $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'none');
+                }
             }
             var body = arr[0];
             $('#new_post_form')[0].reset();
-            $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
             $('div.Posted_posts div.card:first-child p').html(body);
-            //duhet qe te shtosh nje te re si kjo ne fillim duke zvendesuar vtm ato qe merr nga callback-u;
-            //$('div.Posted_posts div.card:first-child').html();
+            $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
         }
     });
 
