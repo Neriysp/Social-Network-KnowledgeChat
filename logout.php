@@ -4,8 +4,10 @@ require_once 'classes/Login.php';
 
 if(!$user_id=Login::isLoggedIn($mysqli)){
 
-  die("Not logged in.");
+  header("location:index.php");
 }
+else{
+
   if(isset($_POST['confirm'])){
 
     if(isset($_POST['alldevices'])){
@@ -23,8 +25,9 @@ if(!$user_id=Login::isLoggedIn($mysqli)){
     }
          setcookie('SNID','',time()-3600,'/');
          setcookie('SNID_C','',time()-3600,'/');
+         header("location:index.php");
   }
-
+}
 ?>
 <!DOCTYPE html>
 <html>

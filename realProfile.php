@@ -19,7 +19,7 @@
 		<button id="search-button"><span><i class="fa fa-search" aria-hidden="true"></i></button>
 		<div class="nav-buttons">
 		<button id="home-button">Home</button>
-		<button id="profile-button">Profile</button>
+		<button id="profile-button"><a href="profile.php?user=<?=$user_id?>">Profile</a></button>
 		<div class="dropdown">
   		<button id="group-button">My Groups</button>
  		 <div class="dropdown-content">

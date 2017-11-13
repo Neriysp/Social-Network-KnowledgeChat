@@ -6,8 +6,8 @@ require 'classes/Profile.php';
 
 if(!$user_id=Login::isLoggedIn($mysqli)){
   //Rasti kur kerkon profilin nga url direkt pa bere login
-  die("Not logged in!");
-}
+  header("location:index.php");
+}else{
 
 $result=$mysqli->query("SELECT * from t_users where id=$user_id");
 if($result->num_rows>0){
@@ -45,6 +45,7 @@ if(isset($_GET['user']) && !empty($_GET['user'])){
 else{
   header("location:profile.php?user=$user_id");
 
+}
 }
 
 ?>
