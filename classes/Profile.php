@@ -9,12 +9,14 @@ class Profile{
     private $last_name;
     private $prof_image;
     private $isOwnProfile;
+    private $visitor_profile_pic;
 
-    public function __construct($_profile_id,$conn,$isOwnProfile){
+    public function __construct($_profile_id,$conn,$isOwnProfile,$profile_pic){
 
         $this->profile_id=$_profile_id;
         $this->mysqli=$conn;
         $this->isOwnProfile=$isOwnProfile;
+        $this->visitor_profile_pic=$profile_pic;
     }
 
     public function getUserData(){
@@ -33,7 +35,7 @@ class Profile{
 
          $sidebar_html=($this->prof_image!=null ?
                     '<div class="profile-photo">
-                    <img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" height="100px" width="100px">			
+                    <img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" height="100px" width="100px" id="prof_pic">			
                     </div>':'').'
                     <div class="description">
                 <p>'.$this->first_name.' '.$this->last_name.'</p>
@@ -43,6 +45,17 @@ class Profile{
                     </div>'.($this->isOwnProfile ? 
                     '<div class="Actions">
                             Actions:
+                            <p>
+                            <form id="profile_pic_form" method="post" enctype="multipart/form-data">
+                             <label for="profile_photo" class="btn">
+                             <span id="upload_new_photo" style="margin-bottom:7px;margin-top:7px;">
+                             Update profile picture</span></i>
+                             </label>
+                            <input type="file" style="display:none;" name="profile_photo" id="profile_photo" /> 
+                            <input type="hidden" name="action" id="action" value="change_prof_pic" />
+                           <!-- <input type="submit"  class="post_btn" name="insert" id="change_prof_pic" value="Post"/>-->
+                            </form>
+                        </p>
                                 <p><button>Create a new Group</button></p>
                                 <br>
                                 <p>
@@ -92,7 +105,7 @@ class Profile{
 
       $posts=$this->mysqli->query("select * from t_posts where user_id=$this->profile_id ORDER BY id DESC");
     
-      $posts_html=($this->isOwnProfile ? '<div class="card">
+      $posts_html=($this->isOwnProfile ? '<div class="card" id="card_of_create_post">
 			<div class="create_post">
 			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Create a Post</p>
 			</div>
@@ -110,17 +123,45 @@ class Profile{
                     <span><i class="fa fa-code fa-lg" aria-hidden="true"></i></span>
 			        <input type="submit" class="post_btn" name="insert" id="insert" value="Post"/>
       </form>
-            </div>':'').'<div class="Posted_posts">';
+            </div>':'').'<div class="Posted_posts">'.'
+            <div class="card" style="display:none;">'
+          .($this->prof_image!=null ?
+          '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
+          <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>
+          <br><a  class="time"></a>
+          <p class="body"></p>
+          <img src="" class="img-primary">
+          <div class="footer">
+   			 <div class="controls">
+             <a href="#" class="like">
+                <i class="fa fa-thumbs-up" style="margin-right: 5px;" aria-hidden="true"></i>Like</a>
+             <a href="#" class="comment">
+                <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
+             <a href="#" class="share">
+                <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
+            </div>
+            <div class="new_comment">
+              <div class="prof_img"><img src="" class="img-profile profile_picture"></div>
+              <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
+            </div>
+            <div class="comments_w">
+              <div class="comment_child">
+                <div class="prof_img"><img src="" class="img-profile profile_picture"></div>
+                 <div class="output ">Ketu eshte nje sample comment!</div>
+              </div>
+            </div>
+          </div>
+    	</div>';
       if($posts->num_rows>0){
       while($post=mysqli_fetch_array($posts)){
 
           $posts_html .='<div class="card">'
           .($this->prof_image!=null ?
-          '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" class="img-profile profile_picture">':'').'
+          '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
           <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
           .($post['group_name']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
-          <a  class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
+          <br><a  class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').'
           <div class="footer">
@@ -133,21 +174,14 @@ class Profile{
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
             </div>
             <div class="new_comment">
-              <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
+              <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'"
+              class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
             </div>
             <div class="comments_w">
               <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!</div>
-              </div>
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!</div>
-              </div>
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!</div>
+                <div class="prof_img"><img src="" class="img-profile profile_picture"></div>
+                 <div class="output ">Ketu eshte nje sample comment!</div>
               </div>
             </div>
           </div>

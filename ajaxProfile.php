@@ -14,7 +14,7 @@ if(isset($_POST["action"]))
         {
             $mysqli->query("Insert into T_posts(body,user_id,post_date) values('$body',$user_id,now())");
             
-            echo json_encode([$body]);
+        
         }
         else {
             // if(file_get_contents($_FILES["image"]["tmp_name"])!= strip_tags(file_get_contents($_FILES["image"]["tmp_name"]))){
@@ -23,12 +23,26 @@ if(isset($_POST["action"]))
             // else{
                     $image = $mysqli->escape_string(file_get_contents($_FILES["image"]["tmp_name"]));
                     $mysqli->query("Insert into T_posts(image,body,user_id,post_date) values('$image','$body',$user_id,now())");
-                    echo json_encode([$body,'data:image/jpeg;base64,'.base64_encode(file_get_contents($_FILES["image"]["tmp_name"]))]);
+                    echo json_encode('data:image/jpeg;base64,'.base64_encode(file_get_contents($_FILES["image"]["tmp_name"])));
             //}
         }
 
     }
 
+    if($_POST["action"] == "change_prof_pic")
+    {
+        $user_id=Login::isLoggedIn($mysqli);
+        
+        if($_FILES["profile_photo"]["tmp_name"]!=null)
+        {
+            $image = $mysqli->escape_string(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
+
+
+            $mysqli->query("Update t_users set prof_image ='$image' where id=$user_id");
+            
+            echo json_encode('data:image/jpeg;base64,'.base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"])));
+        }
+    }
 
 
 }

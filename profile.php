@@ -16,6 +16,7 @@ if($result->num_rows>0){
   $email=$user['email'];
   $firstName=$user['first_name'];
   $lastName=$user['last_name'];
+  $profile_pic=$user['prof_image'];
 }
 
 if(isset($_GET['user']) && !empty($_GET['user'])){
@@ -30,7 +31,7 @@ if(isset($_GET['user']) && !empty($_GET['user'])){
     else{
       $isOwnProfile=false;
     }
-    $UserProfile= new Profile($profile_id,$mysqli,$isOwnProfile);
+    $UserProfile= new Profile($profile_id,$mysqli,$isOwnProfile,$profile_pic);
 
     if(!$active){
       include 'profileNactive.php';

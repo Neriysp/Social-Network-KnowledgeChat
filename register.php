@@ -19,8 +19,9 @@ if($result->num_rows>0){
   Reporter::report_err("User with this email already exists!");
 }
 else{
-  $sql = "INSERT INTO t_users(first_name,last_name,email,password,hash)
-  VALUES('$firstName','$lastName','$email','$password','$hash')";
+  $defaultImgPath='c:/xampp/htdocs/KnowledgeChatPhp/new/images/avatar.jpeg';
+  $sql = "INSERT INTO t_users(first_name,last_name,email,password,hash,prof_image)
+  VALUES('$firstName','$lastName','$email','$password','$hash',LOAD_FILE('$defaultImgPath'))";
 
   if($mysqli->query($sql))
   {
