@@ -15,7 +15,7 @@
 	<div class="wrapper">
 	<nav class="navbar box">
 		<div id="title-logo" style="font-size: 25px">Kchat</div>
-		<input type="text" name="search-bar" placeholder="Search for anything..." id="search-bar">
+		<input type="text" name="search-bar" placeholder="Search" id="search-bar">
 		<button id="search-button"><span><i class="fa fa-search" aria-hidden="true"></i></button>
 		<div class="nav-buttons">
 		<button id="home-button">Home</button>

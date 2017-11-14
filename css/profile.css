@@ -183,9 +183,13 @@
 }
 
 .img-primary {
-    width: 100%;
+    width: 476px;
     height: 357px;
     border-radius: 5px;
+}
+
+.comment_child.prof_img.img {
+    border-radius: 100%;
 }
 
 .footer {
