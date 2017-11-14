@@ -66,6 +66,14 @@ $('#new_post_form').submit(function(event) {
         success: function(data) {
             if (data != '') {
                 var imgsrc = JSON.parse(data);
+                if (typeof(imgsrc) == 'object') {
+                    $('#new_post_form')[0].reset();
+                    $('.new_post').addClass("error_placeholder").attr("placeholder", imgsrc[0]);
+                    setTimeout(function() {
+                        $('.new_post').removeClass("error_placeholder").attr("placeholder", 'What\'s on your mind?');
+                    }, 5000);
+                    return false;
+                }
                 if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
                     $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
                 } else {
@@ -125,10 +133,17 @@ $('#profile_pic_form').submit(function(event) {
         contentType: false,
         processData: false,
         success: function(data) {
-            var imgsrc = JSON.parse(data);
+            if (data != '') {
+                var imgsrc = JSON.parse(data);
+                if (typeof(imgsrc) == 'object') {
+                    alert(imgsrc[0]);
+                    return false;
+                }
 
-            $('.profile-photo').find('img#prof_pic').attr("src", imgsrc);
-            $('div.card img#main_pic').attr("src", imgsrc);
+                $('.profile-photo').find('img#prof_pic').attr("src", imgsrc);
+                $('div.card img#main_pic').attr("src", imgsrc);
+                $('.new_comment div.prof_img img').attr("src", imgsrc);
+            }
         },
         error: function(err) {
             console.log("Error while uploading profile picture!" + err.toString());
