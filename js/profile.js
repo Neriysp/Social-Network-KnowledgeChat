@@ -83,6 +83,7 @@ $('#new_post_form').submit(function(event) {
             var body = $('.new_post').val();
             $('div.Posted_posts div.card:first-child p').html(body);
             $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
+            $('.new_comment div.prof_img img').attr("src", $('.profile-photo img').attr("src"));
             $('#new_post_form')[0].reset();
 
         },

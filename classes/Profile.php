@@ -141,7 +141,7 @@ class Profile{
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
             </div>
             <div class="new_comment">
-              <div class="prof_img"><img src="" class="img-profile profile_picture"></div>
+              <div class="prof_img"><img src="" class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
             </div>
             <div class="comments_w">
