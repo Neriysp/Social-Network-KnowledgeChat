@@ -109,14 +109,18 @@
 
 .comment_child {
     margin-top: 5px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.comment_child:last-child {
+    border-bottom: 2px solid white;
 }
 
 .output {
     width: 85%;
     display: inline-block;
-    border-bottom: 1px solid #e5e5e5;
-    padding-top: 15px;
-    padding-bottom: 25px;
+    padding-top: 0px;
+    padding-bottom: 5px;
 }
 
 #card_of_create_post {
@@ -183,7 +187,7 @@
 }
 
 .img-primary {
-    width: 476px;
+    width: 100%;
     height: 357px;
     border-radius: 5px;
 }

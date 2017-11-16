@@ -1,6 +1,5 @@
 <?php
 
-
 class Profile{
 
     private $profile_id;
@@ -154,7 +153,7 @@ class Profile{
     	</div>';
       if($posts->num_rows>0){
       while($post=mysqli_fetch_array($posts)){
-
+         $comments_html=$this->getComments($post['id']);
           $posts_html .='<div class="card">'
           .($this->prof_image!=null ?
           '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
@@ -163,7 +162,8 @@ class Profile{
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
           <br><a  class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
-          <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').'
+          <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').
+          '<input type="hidden" name="post_id" class="" value="'.$post['id'].'" />
           <div class="footer">
    			 <div class="controls">
              <a href="#" class="like">
@@ -179,16 +179,42 @@ class Profile{
               <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
             </div>
             <div class="comments_w">
-              <div class="comment_child">
-                <div class="prof_img"><img src="" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte nje sample comment!</div>
-              </div>
+            '.$comments_html.'
             </div>
           </div>
     	</div>';
         }
       }
       echo $posts_html.'</div>';
+    }
+
+    public function getComments($post_id){
+        $comments=$this->mysqli->query( "select t_comments.id as comm_id,body,likes,nr_replies,first_name,last_name,prof_image,comment_data 
+                                        from t_comments join t_users on t_comments.user_id=t_users.id
+                                            where post_id= $post_id ORDER BY t_comments.id DESC limit 2");
+        $comments_html='';
+    if($comments->num_rows>0){
+
+        while($comment=mysqli_fetch_array($comments)){
+            $comments_html.='
+              <div class="comment_child">
+                <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
+                <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
+                 class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
+                 <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
+                 </div>
+                 <div class="output">'.$comment['body'].'</div>
+                 <div class="comment_footer" style="margin-left:50px;">
+                 <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
+                 <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
+                 <a  class="time">'.$this->time_elapsed_string($comment['comment_data']).'</a>
+                 </div>
+              </div>';
+            }
+        
+        }
+
+            return $comments_html;
     }
 
     public function getRightSidebar(){
