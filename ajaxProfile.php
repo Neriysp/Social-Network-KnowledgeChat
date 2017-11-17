@@ -12,8 +12,15 @@ if(isset($_POST["action"]))
         $body=$_POST['body_post'];
         if($_FILES["image"]["tmp_name"]==null)
         {
-            $mysqli->query("Insert into T_posts(body,user_id,post_date) values('$body',$user_id,now())");
+           $result= $mysqli->query("SELECT f_insert_post('$body',$user_id) as last_inserted_post")or die($mysqli->error);
             
+           if($result->num_rows>0){
+                 $post_id=$result->fetch_assoc();
+                    $last_post_id=$post_id['last_inserted_post'];
+                          echo json_encode(['post_id'=>$last_post_id]);
+             }else{
+                 throw error;
+             }
         
         }
         else {
@@ -24,8 +31,14 @@ if(isset($_POST["action"]))
                 if($_FILES["image"]["error"]===0){
                     if($_FILES["image"]["size"]<1000000){
                     $image = $mysqli->escape_string(file_get_contents($_FILES["image"]["tmp_name"]));
-                    $mysqli->query("Insert into T_posts(image,body,user_id,post_date) values('$image','$body',$user_id,now())");
-                    echo json_encode('data:image/jpeg;base64,'.base64_encode(file_get_contents($_FILES["image"]["tmp_name"])));
+                    $result=$mysqli->query("SELECT f_insert_post_with_photo('$body',$user_id,'$image') as last_inserted_post")or die($mysqli->error);
+                        if($result->num_rows>0){
+                        $post_id=$result->fetch_assoc();
+                        $last_post_id=$post_id['last_inserted_post'];
+                            echo json_encode(['post_id'=>$last_post_id,'imgsrc'=>'data:image/jpeg;base64,'.base64_encode(file_get_contents($_FILES["image"]["tmp_name"]))]);
+                        }else{
+                            throw error;
+                            }
                     }else{
                         echo json_encode(['Please pick a file with size smaller than 1 Mb!']);
                     }

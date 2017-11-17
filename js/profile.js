@@ -65,7 +65,11 @@ $('#new_post_form').submit(function(event) {
         processData: false,
         success: function(data) {
             if (data != '') {
-                var imgsrc = JSON.parse(data);
+                var objData = JSON.parse(data);
+            }
+            if (objData.hasOwnProperty('imgsrc')) {
+                var imgsrc = objData.imgsrc;
+                var new_post_id = objData.post_id;
                 if (typeof(imgsrc) == 'object') {
                     $('#new_post_form')[0].reset();
                     $('.new_post').addClass("error_placeholder").attr("placeholder", imgsrc[0]);
@@ -83,6 +87,7 @@ $('#new_post_form').submit(function(event) {
                 $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'block');
                 $('div.Posted_posts div.card:first-child img.img-primary').attr("src", imgsrc);
             } else {
+                var new_post_id = objData.post_id;
                 $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
                 if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
                     $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'none');
@@ -94,6 +99,7 @@ $('#new_post_form').submit(function(event) {
             $('.new_comment div.prof_img img').attr("src", $('.profile-photo img').attr("src"));
             $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
             $('div.Posted_posts div.card:first-child').find('.comment_child').hide();
+            $('div.Posted_posts div.card:first-child .footer .new_comment .input .post_id_hidden').attr('value', new_post_id);
             $('#new_post_form')[0].reset();
 
         },
