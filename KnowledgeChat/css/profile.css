@@ -104,16 +104,11 @@
 
 .new_comment {
     margin-top: 5px;
-    border-bottom: 1px solid #e5e5e5;
 }
 
 .comment_child {
     margin-top: 5px;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.comment_child:last-child {
-    border-bottom: 2px solid white;
+    border-top: 1px solid #e5e5e5;
 }
 
 .output {
