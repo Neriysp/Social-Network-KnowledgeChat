@@ -171,14 +171,15 @@ function newcomment(event) {
             success: function(data) {
                 if (data != '' && data != null) {
                     var fullName = JSON.parse(data);
-                    var parent = event.target.parentElement.parentElement.nextElementSibling;
-                    var newCommentHtml = parent.children[0].cloneNode(true);
+                    var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w');
+                    var newCommentHtml = parent[0].getElementsByClassName('comment_child')[parent[0].getElementsByClassName('comment_child').length - 1].cloneNode(true);
+                    //  var newCommentHtml = parent.children[0].cloneNode(true);
                     newCommentHtml.style = '';
                     newCommentHtml.getElementsByClassName('comment_footer')[0].getElementsByClassName('time')[0].innerHTML = "Just Now";
                     newCommentHtml.getElementsByClassName('user')[0].innerHTML = fullName.first_name + ' ' + fullName.last_name;
                     newCommentHtml.getElementsByClassName('output')[0].innerHTML = htmlEntities(event.target.value);
                     newCommentHtml.getElementsByClassName('img-profile profile_picture')[0].src = document.getElementsByClassName('new_comment')[0].getElementsByClassName('img-profile profile_picture')[0].src;
-                    parent.insertBefore(newCommentHtml, parent.children[0]);
+                    parent[0].getElementsByClassName('comment_child')[0].parentElement.insertBefore(newCommentHtml, parent[0].getElementsByClassName('comment_child')[0]);
                     event.target.value = '';
                 }
             },
@@ -188,4 +189,10 @@ function newcomment(event) {
         });
 
     }
+}
+
+
+function findAncestor(el, cls) {
+    while ((el = el.parentElement) && !el.classList.contains(cls));
+    return el;
 }
