@@ -28,5 +28,12 @@ class Login{
   return false;
 }
 
-
+    public static function getFistLastName($user_id,$mysqli)
+    {
+        $result=$mysqli->query("select * from t_users where id=$user_id");
+        $user=$result->fetch_assoc();
+        $first_name=ucfirst($user['first_name']);
+        $last_name=ucfirst($user['last_name']);
+        return ['first_name'=>$first_name,'last_name'=>$last_name];
+    }
 }

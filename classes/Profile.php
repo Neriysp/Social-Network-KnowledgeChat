@@ -140,13 +140,24 @@ class Profile{
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
             </div>
             <div class="new_comment">
-              <div class="prof_img"><img src="" class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
-              <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
+              <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'
+              " class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
+              <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
+              <input type="hidden" name="post_id" class="post_id_hidden" value="-1" /> </div>
             </div>
             <div class="comments_w">
-              <div class="comment_child">
-                <div class="prof_img"><img src="" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte nje sample comment!</div>
+               <div class="comment_child" style="display:none;">
+                <input type="hidden" name="post_id" class="" value="-1" />
+                <div class="prof_img"><img src="data:image/jpeg;base64,"
+                 class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
+                 <a href="#" class="user"></a>
+                 </div>
+                 <div class="output"></div>
+                 <div class="comment_footer" style="margin-left:50px;">
+                 <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
+                 <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
+                 <a  class="time"></a>
+                 </div>
               </div>
             </div>
           </div>
@@ -163,8 +174,7 @@ class Profile{
           <br><a  class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').
-          '<input type="hidden" name="post_id" class="" value="'.$post['id'].'" />
-          <div class="footer">
+          ' <div class="footer">
    			 <div class="controls">
              <a href="#" class="like">
                 <i class="fa fa-thumbs-up" style="margin-right: 5px;" aria-hidden="true"></i>Like</a>
@@ -176,7 +186,8 @@ class Profile{
             <div class="new_comment">
               <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'"
               class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
-              <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
+              <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
+              <input type="hidden" name="post_id" class="post_id_hidden" value="'.$post['id'].'" /> </div>
             </div>
             <div class="comments_w">
             '.$comments_html.'
@@ -192,7 +203,20 @@ class Profile{
         $comments=$this->mysqli->query( "select t_comments.id as comm_id,body,likes,nr_replies,first_name,last_name,prof_image,comment_data 
                                         from t_comments join t_users on t_comments.user_id=t_users.id
                                             where post_id= $post_id ORDER BY t_comments.id DESC limit 2");
-        $comments_html='';
+
+        $comments_html='<div class="comment_child" style="display:none;">
+                <input type="hidden" name="post_id" class="" value="-1" />
+                <div class="prof_img"><img src="data:image/jpeg;base64,"
+                 class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
+                 <a href="#" class="user"></a>
+                 </div>
+                 <div class="output"></div>
+                 <div class="comment_footer" style="margin-left:50px;">
+                 <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
+                 <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
+                 <a  class="time"></a>
+                 </div>
+              </div>';
     if($comments->num_rows>0){
 
         while($comment=mysqli_fetch_array($comments)){

@@ -64,3 +64,25 @@ if(isset($_POST["action"]))
 
 
 }
+
+if(isset($_POST["functionName"])){
+
+    if($_POST['functionName']=='newcomment' && isset($_POST['body']) && isset($_POST['post_id'])){
+
+        $user_id=Login::isLoggedIn($mysqli);
+        $body=$mysqli->escape_string($_POST['body']);
+        $post_id=$mysqli->escape_string($_POST['post_id']);
+        if($post_id==-1){
+            $result=$mysqli->query("select id from t_posts where user_id=$user_id order by id desc limit 1 ");
+            $post=$result->fetch_assoc();
+            $post_id=$post['id'];
+        }
+        $mysqli->query("insert into t_comments(body,user_id,post_id,comment_data) values ('$body',$user_id,$post_id,now())");
+        $fullName=Login::getFistLastName($user_id,$mysqli);
+
+        echo json_encode(['first_name'=>$fullName['first_name'],'last_name'=>$fullName['last_name']]);
+    }
+
+
+}
+

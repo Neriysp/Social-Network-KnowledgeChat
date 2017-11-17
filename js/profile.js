@@ -92,6 +92,8 @@ $('#new_post_form').submit(function(event) {
             $('div.Posted_posts div.card:first-child p').html(body);
             $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
             $('.new_comment div.prof_img img').attr("src", $('.profile-photo img').attr("src"));
+            $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
+            $('div.Posted_posts div.card:first-child').find('.comment_child').hide();
             $('#new_post_form')[0].reset();
 
         },
@@ -151,3 +153,39 @@ $('#profile_pic_form').submit(function(event) {
     });
 
 });
+
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function newcomment(event) {
+
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        var body = htmlEntities(event.target.value);
+        var post_id = event.target.parentElement.getElementsByClassName('post_id_hidden')[0].value;
+        $.ajax({
+            url: "ajaxProfile.php",
+            method: "POST",
+            data: { functionName: "newcomment", body: body, post_id: post_id },
+            success: function(data) {
+                if (data != '' && data != null) {
+                    var fullName = JSON.parse(data);
+                    var parent = event.target.parentElement.parentElement.nextElementSibling;
+                    var newCommentHtml = parent.children[0].cloneNode(true);
+                    newCommentHtml.style = '';
+                    newCommentHtml.getElementsByClassName('comment_footer')[0].getElementsByClassName('time')[0].innerHTML = "Just Now";
+                    newCommentHtml.getElementsByClassName('user')[0].innerHTML = fullName.first_name + ' ' + fullName.last_name;
+                    newCommentHtml.getElementsByClassName('output')[0].innerHTML = htmlEntities(event.target.value);
+                    newCommentHtml.getElementsByClassName('img-profile profile_picture')[0].src = document.getElementsByClassName('new_comment')[0].getElementsByClassName('img-profile profile_picture')[0].src;
+                    parent.insertBefore(newCommentHtml, parent.children[0]);
+                    event.target.value = '';
+                }
+            },
+            error: function(err) {
+                console.log("Error while creating the comment!" + err.toString());
+            }
+        });
+
+    }
+}
