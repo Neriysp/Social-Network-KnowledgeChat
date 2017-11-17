@@ -116,6 +116,7 @@
     display: inline-block;
     padding-top: 0px;
     padding-bottom: 5px;
+    word-wrap: break-word;
 }
 
 #card_of_create_post {
@@ -216,9 +217,23 @@
     text-decoration: none;
 }
 
+.view_more_comments {
+    color: #7f7f7f;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding: 4px 4px 4px 0;
+    text-decoration: none;
+}
+
+.view_more_comments:hover,
 .like:hover,
 .comment:hover,
 .share:hover {
+    cursor: pointer;
     text-decoration: underline;
 }
 

@@ -1,3 +1,6 @@
+window.onbeforeunload = function() {
+    window.scrollTo(0, 0);
+}
 $(function() {
     //OPEN
     $('[data-popup-open]').on('click', function(e) {
@@ -196,7 +199,44 @@ function newcomment(event) {
 
     }
 }
-
+//TODO:FIXME:Permiresim Per kommentet nqs ka shum i merr disa nga db-ja,Per me vone;
+// function viewMoreComments(event) {
+//     event.preventDefault();
+//     var post_id = event.target.parentElement.getElementsByClassName('input')[0].getElementsByClassName('post_id_hidden')[0].value;
+//     $.ajax({
+//         url: "ajaxProfile.php",
+//         method: "POST",
+//         data: { functionName: "fetchMoreComments", post_id: post_id },
+//         success: function(data) {
+//             if (data != '' && data != null) {
+//                 var fetchedComments = JSON.parse(data);
+//                 var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w')[0];
+//                 var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w');
+//                 var newCommentHtml = parent[0].getElementsByClassName('comment_child')[parent[0].getElementsByClassName('comment_child').length - 1].cloneNode(true);
+//                 //  var newCommentHtml = parent.children[0].cloneNode(true);
+//                 newCommentHtml.style = '';
+//                 newCommentHtml.getElementsByClassName('comment_footer')[0].getElementsByClassName('time')[0].innerHTML = "Just Now";
+//                 newCommentHtml.getElementsByClassName('user')[0].innerHTML = fullName.first_name + ' ' + fullName.last_name;
+//                 newCommentHtml.getElementsByClassName('output')[0].innerHTML = htmlEntities(event.target.value);
+//                 newCommentHtml.getElementsByClassName('img-profile profile_picture')[0].src = document.getElementsByClassName('new_comment')[0].getElementsByClassName('img-profile profile_picture')[0].src;
+//                 parent[0].getElementsByClassName('comment_child')[0].parentElement.insertBefore(newCommentHtml, parent[0].getElementsByClassName('comment_child')[0]);
+//                 event.target.value = '';
+//             }
+//         },
+//         error: function(err) {
+//             console.log("Error while creating the comment!" + err.toString());
+//         }
+//     });
+// }
+function viewMoreComments(event) {
+    event.preventDefault();
+    var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w')[0];
+    var hiddenComments = parent.getElementsByClassName('comment_child_hidden');
+    for (var i = 0; i < hiddenComments.length; i++) {
+        hiddenComments[i].style.display = 'block';
+    }
+    event.target.style.display = 'none';
+}
 
 function findAncestor(el, cls) {
     while ((el = el.parentElement) && !el.classList.contains(cls));

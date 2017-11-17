@@ -2,6 +2,8 @@
 require 'db.php';
 require 'classes/Login.php';
 require 'classes/Sanitize.php';
+require 'classes/Profile.php';
+
 
 if(isset($_POST["action"]))
 {
@@ -24,6 +26,7 @@ if(isset($_POST["action"]))
         
         }
         else {
+            //TODO:PERMIRESIM PER KONTORLLIN E IMAZHIT MOS KA NDONJE SQL-INJECTION OSE ESHTE ME NJDONJE PROBLEM 
             // if(file_get_contents($_FILES["image"]["tmp_name"])!= strip_tags(file_get_contents($_FILES["image"]["tmp_name"]))){
             //     echo "ERROR";
             // }
@@ -95,7 +98,41 @@ if(isset($_POST["functionName"])){
 
         echo json_encode(['first_name'=>$fullName['first_name'],'last_name'=>$fullName['last_name']]);
     }
+    //TODO:FIXME:PERMIRESIMI PER COMMENTET QE TE MARRESH ME AJAX
+    // if($_POST['functionName']=='fetchMoreComments' && isset($_POST['post_id'])){
+ 
+    //     $post_id=$mysqli->escape_string($_POST['post_id']);
 
+    //     $comments=$mysqli->query( "select t_comments.id as comm_id,body,likes,nr_replies,first_name,last_name,prof_image,comment_data 
+    //                                     from t_comments join t_users on t_comments.user_id=t_users.id
+    //                                         where post_id= $post_id ORDER BY t_comments.id DESC
+    //                                         ORDER BY t_comments.id DESC LIMIT 3, 18446744073709551615");
+    //     $comments->fetch_assoc();
+    //                                         if($comments->num_rows>0){
+    //                                                    echo json_encode("Here");die();
+    //                                         }else{
+    //                                                    echo json_encode(" NOT Here");die();
+    //                                         }
+    //         $comments_html.='';
+
+    //         while($comment=mysqli_fetch_array($comments)){
+    //         $comments_html.='
+    //           <div class="comment_child">
+    //             <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
+    //             <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
+    //              class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
+    //              <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
+    //              </div>
+    //              <div class="output">'.$comment['body'].'</div>
+    //              <div class="comment_footer" style="margin-left:50px;">
+    //              <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
+    //              <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
+    //              <a  class="time">'.Profile::time_elapsed_string($comment['comment_data']).'</a>
+    //              </div>
+    //           </div>';
+    //      }
+
+    //         echo json_encode($comments_html);
+    // }
 
 }
-

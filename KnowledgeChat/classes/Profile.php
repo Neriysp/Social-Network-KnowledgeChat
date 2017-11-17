@@ -191,7 +191,6 @@ class Profile{
             </div>
             <div class="comments_w">
             '.$comments_html.'
-            </div>
           </div>
     	</div>';
         }
@@ -202,8 +201,8 @@ class Profile{
     public function getComments($post_id){
         $comments=$this->mysqli->query( "select t_comments.id as comm_id,body,likes,nr_replies,first_name,last_name,prof_image,comment_data 
                                         from t_comments join t_users on t_comments.user_id=t_users.id
-                                            where post_id= $post_id ORDER BY t_comments.id DESC limit 2");
-
+                                            where post_id= $post_id ORDER BY t_comments.id DESC");
+      
         $comments_html='<div class="comment_child" style="display:none;">
                 <input type="hidden" name="post_id" class="" value="-1" />
                 <div class="prof_img"><img src="data:image/jpeg;base64,"
@@ -217,28 +216,49 @@ class Profile{
                  <a  class="time"></a>
                  </div>
               </div>';
+        $nrOfShownComments=2;
     if($comments->num_rows>0){
-
-        while($comment=mysqli_fetch_array($comments)){
-            $comments_html.='
-              <div class="comment_child">
-                <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
-                <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
-                 class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
-                 <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
-                 </div>
-                 <div class="output">'.$comment['body'].'</div>
-                 <div class="comment_footer" style="margin-left:50px;">
-                 <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
-                 <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
-                 <a  class="time">'.$this->time_elapsed_string($comment['comment_data']).'</a>
-                 </div>
-              </div>';
+        for($i=0;$i<$comments->num_rows;$i++){
+            if($comment=mysqli_fetch_array($comments)){
+                if($i<$nrOfShownComments){
+                $comments_html.='
+                <div class="comment_child">
+                    <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
+                    <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
+                    class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
+                    <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
+                    </div>
+                    <div class="output">'.$comment['body'].'</div>
+                    <div class="comment_footer" style="margin-left:50px;">
+                    <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
+                    <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
+                    <a  class="time">'.$this->time_elapsed_string($comment['comment_data']).'</a>
+                    </div>
+                </div>';
+                }else{
+                    $comments_html.='
+                        <div class="comment_child_hidden" style="display:none;">
+                            <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
+                            <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
+                            class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
+                            <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
+                            </div>
+                            <div class="output">'.$comment['body'].'</div>
+                            <div class="comment_footer" style="margin-left:50px;">
+                            <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
+                            <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
+                            <a  class="time">'.$this->time_elapsed_string($comment['comment_data']).'</a>
+                            </div>
+                        </div>';
+                }
             }
+        }
         
         }
-
-            return $comments_html;
+            $nrOfMoreComments=$comments->num_rows-$nrOfShownComments;
+            return ($comments->num_rows<=3?$comments_html.'</div>':$comments_html.'
+            </div>
+            <a  class="view_more_comments" onclick="viewMoreComments(event)">View '.$nrOfMoreComments.' more comments</a>') ;
     }
 
     public function getRightSidebar(){
@@ -270,7 +290,7 @@ class Profile{
 
 
 
-    public function time_elapsed_string($datetime, $full = false) {
+    public static function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
     $diff = $now->diff($ago);
