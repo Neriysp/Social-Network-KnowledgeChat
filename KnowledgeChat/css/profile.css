@@ -106,7 +106,8 @@
     margin-top: 5px;
 }
 
-.comment_child {
+.comment_child,
+.comment_child_hidden {
     margin-top: 5px;
     border-top: 1px solid #e5e5e5;
 }
@@ -188,7 +189,8 @@
     border-radius: 5px;
 }
 
-.comment_child.prof_img.img {
+.comment_child.prof_img.img,
+.comment_child_hidden.prof_img.img {
     border-radius: 100%;
 }
 
