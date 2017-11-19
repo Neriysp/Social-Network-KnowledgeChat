@@ -106,15 +106,16 @@ if(isset($_POST["functionName"])){
             $group_description=Sanitize::prepDb($_POST['description'],$mysqli);
             $group_topic=Sanitize::prepDb($_POST['topic'],$mysqli);
             $typeOfGroup=Sanitize::prepDb($_POST['typeOfGroup'],$mysqli);
+            $defaultImgPath='c:/xampp/htdocs/KnowledgeChatPhp/new/KnowledgeChat/images/group.png';
             if(isset($_POST['addedMembers'])){
                 $initial_members=Sanitize::prepDb($_POST['addedMembers'],$mysqli);
-                $mysqli->query("insert into t_groups(group_name,group_description,group_topic,group_type,group_admin)
-                                 values('$group_name','$group_description','$group_topic','$typeOfGroup',$user_id)");
+                $mysqli->query("insert into t_groups(group_name,group_description,group_topic,group_type,group_admin,group_image)
+                                 values('$group_name','$group_description','$group_topic','$typeOfGroup',$user_id,LOAD_FILE('$defaultImgPath'))");
                 echo json_encode(['location'=>"group.php?group=$group_name"]);
             }
         else{
-            $mysqli->query("insert into t_groups(group_name,group_description,group_topic,group_type,group_admin)
-                                 values('$group_name','$group_description','$group_topic','$typeOfGroup',$user_id)");
+            $mysqli->query("insert into t_groups(group_name,group_description,group_topic,group_type,group_admin,group_image)
+                                 values('$group_name','$group_description','$group_topic','$typeOfGroup',$user_id,LOAD_FILE('$defaultImgPath'))");
                 echo json_encode(['location'=>"group.php?group=$group_name"]);
         }
         }

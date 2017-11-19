@@ -44,7 +44,7 @@ $('.show_more_comments').click(function(e) {
 $('.hide_chat').click(function(e) {
     if ($('.sidebar').is(":visible")) {
         $('.sidebar').hide();
-        $('.wrapper').css({ "grid-template-columns": " 1fr 1.5fr 1.5fr 20px" });
+        $('.wrapper').css({ "grid-template-columns": " 1fr 1.5fr 1.5fr" });
         $('.hide_chat').html('<i class="fa fa-chevron-left" aria-hidden="true"></i>');
     } else {
         $('.sidebar').show();

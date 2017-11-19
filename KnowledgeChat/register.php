@@ -19,7 +19,7 @@ if($result->num_rows>0){
   Reporter::report_err("User with this email already exists!");
 }
 else{
-  $defaultImgPath='c:/xampp/htdocs/KnowledgeChatPhp/new/images/avatar.jpeg';
+  $defaultImgPath='c:/xampp/htdocs/KnowledgeChatPhp/new/KnowledgeChat/images/avatar.jpeg';
   $sql = "INSERT INTO t_users(first_name,last_name,email,password,hash,prof_image)
   VALUES('$firstName','$lastName','$email','$password','$hash',LOAD_FILE('$defaultImgPath'))";
 
