@@ -68,9 +68,11 @@
     <div  class='popup_group_type'>
     <label>Choose group type</label>
     <input id="rad_open" type="radio" name="type_of_group"  value="open" checked="checked"> 
-    <label for="rad_open" id="radio"><i class="fa fa-unlock-alt fa-2x" aria-hidden="true"></i>Open group <br> Anyone can join the group! </label>
+    <label for="rad_open" id="radio"><i class="fa fa-unlock fa-2x" aria-hidden="true"></i>Open group <br> Anyone can join the group! </label>
     <input id="rad_closed" type="radio" name="type_of_group" value="closed" > 
-    <label for="rad_closed" id="radio"><i class="fa fa-lock fa-2x" aria-hidden="true"></i>Closed group<br> Requires acceptance from admin to join! </label>
+    <label for="rad_closed" id="radio"><i class="fa fa-unlock-alt fa-2x" aria-hidden="true"></i>Closed group<br> Requires acceptance from admin to join! </label>
+    <input id="rad_private" type="radio" name="type_of_group" value="private" > 
+    <label for="rad_private" id="radio"><i class="fa fa-lock fa-2x" aria-hidden="true"></i>Private group<br> Requires invitation from admin to join! </label>
     </div>
     <div  class='popup_btn_create'>
       <button  id="create_new_group_btn"/>Create</button>

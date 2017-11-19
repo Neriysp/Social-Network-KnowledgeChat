@@ -171,7 +171,7 @@ class Profile{
           <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
           .($post['group_name']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
-          <br><a  class="time">'.$this->time_elapsed_string($post['post_date']).'</a>
+          <br><a  class="time">'.G::time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').
           ' <div class="footer">
@@ -232,7 +232,7 @@ class Profile{
                     <div class="comment_footer" style="margin-left:50px;">
                     <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
                     <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
-                    <a  class="time">'.$this->time_elapsed_string($comment['comment_data']).'</a>
+                    <a  class="time">'.G::time_elapsed_string($comment['comment_data']).'</a>
                     </div>
                 </div>';
                 }else{
@@ -247,7 +247,7 @@ class Profile{
                             <div class="comment_footer" style="margin-left:50px;">
                             <a class="like" style="margin-right:5px; margin-bottom:-3px;">Like</a>
                             <a class="comment" style="margin-right:3px; margin-bottom:-3px;">Reply</a>
-                            <a  class="time">'.$this->time_elapsed_string($comment['comment_data']).'</a>
+                            <a  class="time">'.G::time_elapsed_string($comment['comment_data']).'</a>
                             </div>
                         </div>';
                 }
@@ -288,34 +288,4 @@ class Profile{
             echo $rightSidebar_html;
     }
 
-
-
-    public static function time_elapsed_string($datetime, $full = false) {
-    $now = new DateTime;
-    $ago = new DateTime($datetime);
-    $diff = $now->diff($ago);
-
-    $diff->w = floor($diff->d / 7);
-    $diff->d -= $diff->w * 7;
-
-    $string = array(
-        'y' => 'year',
-        'm' => 'month',
-        'w' => 'week',
-        'd' => 'day',
-        'h' => 'hour',
-        'i' => 'minute',
-        's' => 'second',
-    );
-    foreach ($string as $k => &$v) {
-        if ($diff->$k) {
-            $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-        } else {
-            unset($string[$k]);
-        }
-    }
-
-    if (!$full) $string = array_slice($string, 0, 1);
-    return $string ? implode(', ', $string) . ' ago' : 'just now';
-}
 }

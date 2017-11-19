@@ -4,9 +4,9 @@
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Group Page</title>
-	<link rel="stylesheet" type="text/css" href="css/global.css">
-	<link rel="stylesheet" type="text/css" href="css/group.css">
+    <title>Group Page</title>
+    <link rel="stylesheet" type="text/css" href="css/global.css">
+    <link rel="stylesheet" type="text/css" href="css/group.css">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
@@ -317,54 +317,7 @@
     	</div>
     	<div id="posts">
     		<div class="posts box">
-		<div class="card">
-			<div class="create_post">
-			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Create a Group Post</p>
-			</div>
-			<p><textarea class="new_post" rows="4" placeholder="Post your creative work!"></textarea></p>
-                    <span><i class="fa fa-lg fa-camera-retro" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-lg fa-youtube-play" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-code fa-lg" aria-hidden="true"></i></span>
-			<button id="post_btn"><a href="#">Post</a></button>
-		</div>
-		<div class="Posted_posts">
-	<div class="card">
-  		<img src="download.gif" class="img-profile profile_picture">
-  			<p class="who">
-    		<a href="#" class="user">Ben Durra
-  			</p>
-  			<a href="#" class="time">9 hrs</a>
-  			<p>Accidental Samoa and other clichés</p>
-  			<div class="footer">
-   			 <div class="controls">
-             <a href="#" class="like">
-                <i class="fa fa-thumbs-up" style="margin-right: 5px;" aria-hidden="true"></i>Like</a>
-             <a href="#" class="comment">
-                <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
-             <a href="#" class="share">
-                <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
-            </div>
-           <div class="new_comment">
-              <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-              <div class="input"><textarea class="new_comment_area" placeholder="Write a comment..."></textarea> </div>
-            </div>
-            <div class="comments_w">
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!</div>
-              </div>
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!Ketu eshte kommenti i bishes!</div>
-              </div>
-              <div class="comment_child">
-                <div class="prof_img"><img src="download.gif" class="img-profile profile_picture"></div>
-                 <div class="output ">Ketu eshte kommenti i bishes!</div>
-              </div>
-            </div>
- 		 </div>
-	</div>
-		</div>
+             <?= $GroupPage->getPosts()?>
 		</div>
 	<div class="right-sidebar box">
     <div class="right_sidebar_ads">

@@ -259,3 +259,208 @@ td {
     /* Add some space below the input */
     border-radius: 10px;
 }
+
+
+/* SHTUAR PER TE BERE TE PERBASHKTA STYLING E POSTEVE- per profil dhe per group dhe per home me vone */
+
+#card_of_create_post {
+    margin-bottom: 20px;
+    padding-bottom: 50px;
+}
+
+.card span {
+    padding: 10px;
+}
+
+.card {
+    background-color: #fff;
+    width: 500px;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    padding: 12px 12px 0;
+    margin-bottom: 20px;
+    margin-left: 25%;
+    margin-right: 25%;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 3px;
+}
+
+.create_post {
+    border-bottom: 1px solid gray;
+    font-size: 120%;
+}
+
+.new_post {
+    background-color: #fff;
+    width: 95%;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 12px 12px 0;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 3px;
+    resize: none;
+}
+
+.post_btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.img-profile {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    margin-top: -2px;
+    float: left;
+}
+
+.user {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
+    font-weight: bold;
+    color: #365899;
+    text-decoration: none;
+}
+
+.time {
+    color: #90949c;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.body {
+    padding-top: 10px;
+    padding-left: 8px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.img-primary {
+    width: 100%;
+    height: 357px;
+    border-radius: 5px;
+}
+
+.user:hover,
+.friend:hover,
+.time:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    margin-top: 12px;
+    padding-bottom: 4px;
+}
+
+.controls {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    padding-top: 4px;
+}
+
+.like,
+.comment,
+.share {
+    color: #7f7f7f;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    padding: 4px 4px 4px 0;
+    text-decoration: none;
+}
+
+.view_more_comments {
+    color: #7f7f7f;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding: 4px 4px 4px 0;
+    text-decoration: none;
+}
+
+.view_more_comments:hover,
+.like:hover,
+.comment:hover,
+.share:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.new_comment {
+    margin-top: 5px;
+}
+
+.comment_child.prof_img.img,
+.comment_child_hidden.prof_img.img {
+    border-radius: 100%;
+}
+
+.new_comment_area {
+    background-color: #fff;
+    width: 80%;
+    height: 25px;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 12px;
+    padding-top: 8px;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 30px;
+    resize: none;
+}
+
+.comment_child,
+.comment_child_hidden {
+    margin-top: 5px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.output {
+    width: 85%;
+    display: inline-block;
+    padding-top: 0px;
+    padding-bottom: 5px;
+    word-wrap: break-word;
+}
+
+#insert {
+    background-color: #714cac;
+    border: none;
+    padding: 9px;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: -100px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+#insert:hover {
+    cursor: pointer;
+    background: #492e72;
+}
+
+#insert:active {
+    cursor: pointer;
+    background: #000;
+}
+
+
+/* Ketu mbarojne ato qe shtova per ti bere te perbashketa */

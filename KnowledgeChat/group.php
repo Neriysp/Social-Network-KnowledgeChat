@@ -4,6 +4,7 @@ require_once 'classes/Login.php';
 require_once 'classes/Reporter.php';
 require_once 'classes/Sanitize.php';
 require 'classes/Group.php';
+require 'classes/Global.php';
 
 if(!$user_id=Login::isLoggedIn($mysqli)){
   //Rasti kur kerkon grupin nga url direkt pa bere login
@@ -12,6 +13,16 @@ if(!$user_id=Login::isLoggedIn($mysqli)){
 
 if(isset($_GET['group']) && !empty($_GET['group'])){
 
+   $result=$mysqli->query("select * from t_users
+                          left join t_group_user on t_users.id=t_group_user.id_user
+                          where t_users.id=$user_id");
+      if($result->num_rows>0){
+        $user=$result->fetch_assoc();
+        $firstName=$user['first_name'];
+        $lastName=$user['last_name'];
+        $profile_pic=$user['prof_image'];
+        $isPartofGroup=($user['group_name']!=null?true:false);
+      }
     $group_name=Sanitize::prepDb($_GET['group'],$mysqli);
     $result=$mysqli->query("SELECT * from t_groups where group_name='$group_name'");
     if($result->num_rows>0){
@@ -28,7 +39,7 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
     else{
       $isGroupAdmin=false;
     }
-    $GroupPage= new Group($group_name,$mysqli,$group_description,$group_topic,$group_type,$group_image,$isGroupAdmin);
+    $GroupPage= new Group($group_name,$mysqli,$group_description,$group_topic,$group_type,$group_image,$isGroupAdmin,$isPartofGroup);
     
      require 'realGroup.php';
     }
