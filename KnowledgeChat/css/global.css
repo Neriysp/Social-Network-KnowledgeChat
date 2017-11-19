@@ -245,16 +245,17 @@ td {
 
 #searchPopup {
     /* Add a search icon to input */
-    width: 100%;
+    width: 97%;
     /* Full-width */
     font-size: 16px;
     /* Increase font-size */
     padding-top: 10px;
-    padding-right: 30px;
+    padding-left: 10px;
     padding-bottom: 12px;
     border: 1px solid #ddd;
     /* Add a grey border */
+    margin-top: 12px;
     margin-bottom: 12px;
     /* Add some space below the input */
-    border-radius: 5px;
+    border-radius: 10px;
 }

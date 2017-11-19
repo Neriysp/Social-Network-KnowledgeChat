@@ -55,10 +55,10 @@ class Profile{
                            <!-- <input type="submit"  class="post_btn" name="insert" id="change_prof_pic" value="Post"/>-->
                             </form>
                         </p>
-                                <p><button>Create a new Group</button></p>
+                                <p><button data-popup-open="popup-createGroup">Create New Group</button></p>
                                 <br>
                                 <p>
-                                <button class="btn" data-popup-open="popup-1" href="#">Join Existing Groups</button>
+                                <button class="btn" data-popup-open="popup-joinGroup">Join Existing Groups</button>
                                 </p>
                             </div>':'').'
                     <div class="Created_groups">

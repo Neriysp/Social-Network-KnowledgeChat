@@ -239,6 +239,69 @@
     text-decoration: underline;
 }
 
+#new_group_name,
+#new_group_description,
+#new_group_topic,
+#new_add_members {
+    width: 100%;
+    display: block;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 12px;
+    border: 1px solid #ddd;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.popup_btn_create {
+    border-top: 1px solid #ddd;
+    width: 100%;
+    display: block;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.popup_btn_create button {
+    float: right;
+}
+
+.popup_group_type #radio {
+    width: 100%;
+    display: block;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 12px;
+    margin-top: 12px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    padding-left: 10px;
+}
+
+#rad_open,
+#rad_closed {
+    display: none;
+}
+
+input[type="radio"]:checked+label {
+    background-color: rgb(149, 162, 238);
+}
+
+#radio:hover {
+    background-color: #969fc5;
+}
+
+.fa-unlock-alt,
+.fa-lock {
+    float: left;
+    margin-right: 10px;
+}
+
 
 /*Per figurat sociale*/
 

@@ -1,6 +1,10 @@
 window.onbeforeunload = function() {
     window.scrollTo(0, 0);
 }
+
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 $(function() {
     //OPEN
     $('[data-popup-open]').on('click', function(e) {
@@ -96,7 +100,7 @@ $('#new_post_form').submit(function(event) {
                     $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'none');
                 }
             }
-            var body = $('.new_post').val();
+            var body = htmlEntities($('.new_post').val());
             $('div.Posted_posts div.card:first-child p').html(body);
             $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
             $('.new_comment div.prof_img img').attr("src", $('.profile-photo img').attr("src"));
@@ -163,15 +167,12 @@ $('#profile_pic_form').submit(function(event) {
 
 });
 
-function htmlEntities(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 function newcomment(event) {
 
     if (event.keyCode === 13) {
         event.preventDefault();
-        var body = htmlEntities(event.target.value);
+        var body = event.target.value;
         var post_id = event.target.parentElement.getElementsByClassName('post_id_hidden')[0].value;
         $.ajax({
             url: "ajaxProfile.php",
@@ -198,6 +199,77 @@ function newcomment(event) {
         });
 
     }
+}
+document.getElementById("create_new_group_btn").onclick = function(event) {
+    event.preventDefault();
+    var name = document.getElementById('new_group_name').value;
+    var description = document.getElementById('new_group_description').value;
+    var topic = document.getElementById('new_group_topic').value;
+    var addedMembers = document.getElementById('new_add_members').value;
+    if (document.querySelector('input[name="type_of_group"]:checked') != null) {
+
+        var typeOfGroup = document.querySelector('input[name="type_of_group"]:checked').value;
+    } else {
+        return 0;
+    }
+    if (name != '') {
+        if (description != '') {
+            if (topic != '') {
+                if (typeOfGroup != '') {
+                    // name = htmlEntities(name);
+                    description = description;
+                    topic = topic;
+                    addedMembers = addedMembers;
+                    typeOfGroup = typeOfGroup;
+                    $.ajax({
+                        url: "ajaxProfile.php",
+                        method: "POST",
+                        data: {
+                            functionName: "create_new_group",
+                            name: name,
+                            description: description,
+                            topic: topic,
+                            addedMembers: addedMembers,
+                            typeOfGroup: typeOfGroup
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            window.location.href = JSON.parse(data).location;
+                        },
+                        error: function(err) {
+                            console.log("Error while creating the group!" + err.toString());
+                        }
+                    });
+
+                }
+            } else {
+                document.getElementById('new_group_topic').classList.add("error_placeholder");
+                document.getElementById('new_group_topic').placeholder = "Please add a topic for your group.";
+            }
+        } else {
+            document.getElementById('new_group_description').classList.add("error_placeholder");
+            document.getElementById('new_group_description').placeholder = "Please type a description for your group.";
+        }
+    } else {
+        document.getElementById('new_group_name').classList.add("error_placeholder");
+        document.getElementById('new_group_name').placeholder = "Please type a name for your group.";
+    }
+    console.log('Submited!');
+};
+
+function viewMoreComments(event) {
+    event.preventDefault();
+    var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w')[0];
+    var hiddenComments = parent.getElementsByClassName('comment_child_hidden');
+    for (var i = 0; i < hiddenComments.length; i++) {
+        hiddenComments[i].style.display = 'block';
+    }
+    event.target.style.display = 'none';
+}
+
+function findAncestor(el, cls) {
+    while ((el = el.parentElement) && !el.classList.contains(cls));
+    return el;
 }
 //TODO:FIXME:Permiresim Per kommentet nqs ka shum i merr disa nga db-ja,Per me vone;
 // function viewMoreComments(event) {
@@ -228,17 +300,3 @@ function newcomment(event) {
 //         }
 //     });
 // }
-function viewMoreComments(event) {
-    event.preventDefault();
-    var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w')[0];
-    var hiddenComments = parent.getElementsByClassName('comment_child_hidden');
-    for (var i = 0; i < hiddenComments.length; i++) {
-        hiddenComments[i].style.display = 'block';
-    }
-    event.target.style.display = 'none';
-}
-
-function findAncestor(el, cls) {
-    while ((el = el.parentElement) && !el.classList.contains(cls));
-    return el;
-}
