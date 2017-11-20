@@ -291,7 +291,8 @@ td {
     font-size: 120%;
 }
 
-.new_post {
+.new_post,
+.new_post_discussion {
     background-color: #fff;
     width: 95%;
     font-family: helvetica, sans-serif;
