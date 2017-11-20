@@ -51,4 +51,113 @@ $('.hide_chat').click(function(e) {
         $('.wrapper').css({ "grid-template-columns": " 1fr 1.5fr 1.5fr 20px 0.5fr" });
         $('.hide_chat').html('<i class="fa fa-chevron-right" aria-hidden="true"></i>');
     }
-})
+});
+
+
+
+function newcomment(event) {
+
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        var body = event.target.value;
+        var post_id = event.target.parentElement.getElementsByClassName('post_id_hidden')[0].value;
+        $.ajax({
+            url: "ajaxGroup.php",
+            method: "POST",
+            data: { functionName: "newcomment", body: body, post_id: post_id },
+            success: function(data) {
+                if (data != '' && data != null) {
+                    var fullName = JSON.parse(data);
+                    if (fullName.hasOwnProperty('error')) {
+                        alert(objData.error);
+                        return false;
+                    }
+                    var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w');
+                    var newCommentHtml = parent[0].getElementsByClassName('comment_child')[parent[0].getElementsByClassName('comment_child').length - 1].cloneNode(true);
+                    //  var newCommentHtml = parent.children[0].cloneNode(true);
+                    newCommentHtml.style = '';
+                    newCommentHtml.getElementsByClassName('comment_footer')[0].getElementsByClassName('time')[0].innerHTML = "Just Now";
+                    newCommentHtml.getElementsByClassName('user')[0].innerHTML = fullName.first_name + ' ' + fullName.last_name;
+                    newCommentHtml.getElementsByClassName('output')[0].innerHTML = htmlEntities(event.target.value);
+                    newCommentHtml.getElementsByClassName('img-profile profile_picture')[0].src = document.getElementsByClassName('new_comment')[0].getElementsByClassName('img-profile profile_picture')[0].src;
+                    parent[0].getElementsByClassName('comment_child')[0].parentElement.insertBefore(newCommentHtml, parent[0].getElementsByClassName('comment_child')[0]);
+                    event.target.value = '';
+                }
+            },
+            error: function(err) {
+                console.log("Error while creating the comment!" + err.toString());
+            }
+        });
+
+    }
+}
+$('#new_post_form').submit(function(event) {
+    event.preventDefault();
+    var image_name = $('#image').val();
+    if ($('.new_post').val() == '' && image_name == '') {
+        $('.new_post').addClass("error_placeholder").attr("placeholder", 'This post appears to be blank.Please write something or attach a link or photo to post.');
+        setTimeout(function() {
+            $('.new_post').removeClass("error_placeholder").attr("placeholder", 'What\'s on your mind?');
+        }, 5000);
+        return false;
+    }
+    if (image_name == '') {
+        var extension = null;
+    } else {
+        var extension = image_name.split('.').pop().toLowerCase();
+        if (jQuery.inArray(extension, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+            alert("Invalid Image File");
+            $('#image').val('');
+            return false;
+        }
+    }
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            if (data != '') {
+                var objData = JSON.parse(data);
+                if (objData.hasOwnProperty('error')) {
+                    $('#new_post_form')[0].reset();
+                    $('.new_post').addClass("error_placeholder").attr("placeholder", objData.error);
+                    return false;
+                }
+            }
+            if (objData.hasOwnProperty('imgsrc')) {
+                var imgsrc = objData.imgsrc;
+                var new_post_id = objData.post_id;
+
+                if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
+                    $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
+                } else {
+                    $("<img src='' class='img-primary' style='display:none;'>").insertAfter(".body");
+                    $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
+                }
+                $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'block');
+                $('div.Posted_posts div.card:first-child img.img-primary').attr("src", imgsrc);
+            } else {
+                var new_post_id = objData.post_id;
+                $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
+                if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
+                    $('div.Posted_posts div.card:first-child').find('img.img-primary').css('display', 'none');
+                }
+            }
+            var body = htmlEntities($('.new_post').val());
+            $('div.Posted_posts div.card:first-child p').html(body);
+            $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
+            $('.new_comment div.prof_img img').attr("src", document.getElementsByClassName('Posted_posts')[0].getElementsByClassName('card')[document.getElementsByClassName('Posted_posts')[0].getElementsByClassName('card').length - 1].getElementsByClassName('footer')[0].getElementsByClassName('new_comment')[0].getElementsByClassName('img-profile profile_picture')[0].src);
+            $('div.Posted_posts div.card:first-child').find('a.time').html('Just now');
+            $('div.Posted_posts div.card:first-child').find('.comment_child').hide();
+            $('div.Posted_posts div.card:first-child .footer .new_comment .input .post_id_hidden').attr('value', new_post_id);
+            $('#new_post_form')[0].reset();
+
+        },
+        error: function(err) {
+            console.log("Error while uploading new post!" + err.toString());
+        }
+    });
+
+});

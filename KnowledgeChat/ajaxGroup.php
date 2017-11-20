@@ -2,21 +2,25 @@
 require 'db.php';
 require 'classes/Login.php';
 require 'classes/Sanitize.php';
-require 'classes/Profile.php';
+require 'classes/Group.php';
 require 'classes/Reporter.php';
 
 if(isset($_POST["action"]))
 {
 
-    if($_POST["action"] == "insert" && (isset($_POST['body_post'])||$_FILES["image"]["tmp_name"]!=null))
+    if($_POST["action"] == "insert" && isset($_POST["group"]) && (isset($_POST['body_post'])||$_FILES["image"]["tmp_name"]!=null))
     {
+        
         $user_id=Login::isLoggedIn($mysqli);
         if(isset($_POST['body_post'])){
         $body=Sanitize::prepDb($_POST['body_post'],$mysqli);
         }else $body='';
+        $group_name=Sanitize::prepDb($_POST["group"],$mysqli);
+        $resultGroup= $mysqli->query("SELECT * from t_group_users where group_name='$group_name' and id_user=$user_id")or die($mysqli->error);
+        if($resultGroup->num_rows>0){
         if($_FILES["image"]["tmp_name"]==null)
         {
-           $result= $mysqli->query("SELECT f_insert_post('$body',$user_id) as last_inserted_post")or die($mysqli->error);
+           $result= $mysqli->query("SELECT f_insert_post_group('$body',$user_id,'$group_name') as last_inserted_post")or die($mysqli->error);
             
            if($result->num_rows>0){
                  $post_id=$result->fetch_assoc();
@@ -36,7 +40,7 @@ if(isset($_POST["action"]))
                 if($_FILES["image"]["error"]===0){
                     if($_FILES["image"]["size"]<1000000){
                     $image = $mysqli->escape_string(file_get_contents($_FILES["image"]["tmp_name"]));
-                    $result=$mysqli->query("SELECT f_insert_post_with_photo('$body',$user_id,'$image') as last_inserted_post")or die($mysqli->error);
+                    $result=$mysqli->query("SELECT f_insert_post_group_with_photo('$body',$user_id,'$image','$group_name') as last_inserted_post")or die($mysqli->error);
                         if($result->num_rows>0){
                         $post_id=$result->fetch_assoc();
                         $last_post_id=$post_id['last_inserted_post'];
@@ -54,7 +58,10 @@ if(isset($_POST["action"]))
             //}
         }
 
+    }else{
+        echo json_encode(['error'=>'Incorrect Submition!']);
     }
+}
 
     if($_POST["action"] == "change_prof_pic")
     {
@@ -94,41 +101,24 @@ if(isset($_POST["functionName"])){
             $post=$result->fetch_assoc();
             $post_id=$post['id'];
         }
-        $mysqli->query("insert into t_comments(body,user_id,post_id,comment_data) values ('$body',$user_id,$post_id,now())");
+       $result=$mysqli->query("select  * from t_group_posts
+                        join t_group_users on t_group_users.group_name=t_group_posts.group_name
+                        where t_group_posts.id_post=$post_id and t_group_users.id_user=$user_id");
+        
+        if($result->num_rows>0){
+        $mysqli->query("insert into t_group_comments(body,user_id,group_post_id,comment_data) values ( '$body',$user_id,$post_id,now())");
         $fullName=Login::getFistLastName($user_id,$mysqli);
-
         echo json_encode(['first_name'=>$fullName['first_name'],'last_name'=>$fullName['last_name']]);
+        }else{
+             echo json_encode(['error'=>'Incorrect Submition!']);
+        }
     }   
    
-    if($_POST['functionName']=='create_new_group'){
-        if(isset($_POST['name']) && isset($_POST['description'])
-        && isset($_POST['topic']) && isset($_POST['typeOfGroup'])){
-            $user_id=Login::isLoggedIn($mysqli);
-            $group_name=Sanitize::prepDb($_POST['name'],$mysqli);
-            $group_description=Sanitize::prepDb($_POST['description'],$mysqli);
-            $group_topic=Sanitize::prepDb($_POST['topic'],$mysqli);
-            $typeOfGroup=Sanitize::prepDb($_POST['typeOfGroup'],$mysqli);
-            $defaultImgPath='c:/xampp/htdocs/KnowledgeChatPhp/new/KnowledgeChat/images/group.png';
-            if(isset($_POST['addedMembers'])){
-                $initial_members=Sanitize::prepDb($_POST['addedMembers'],$mysqli);
-            $mysqli->query("insert into t_groups(group_name,group_description,group_topic,group_type,group_admin,group_image)
-                            values('$group_name','$group_description','$group_topic','$typeOfGroup',$user_id,LOAD_FILE('$defaultImgPath'));") or die($mysqli->error);
-            $mysqli->query("insert into t_group_users(id_user,group_name,join_date) values($user_id,'$group_name',now())")or die($mysqli->error);           
-                echo json_encode(['location'=>"group.php?group=$group_name"]);
-            }
-        else{
-            $mysqli->query("insert into t_groups(group_name,group_description,group_topic,group_type,group_admin,group_image)
-                            values('$group_name','$group_description','$group_topic','$typeOfGroup',$user_id,LOAD_FILE('$defaultImgPath'));") or die($mysqli->error);
-            $mysqli->query("insert into t_group_users(id_user,group_name,join_date) values($user_id,'$group_name',now())")or die($mysqli->error); 
-                echo json_encode(['location'=>"group.php?group=$group_name"]);
-        }
-        }
-        else{
-            Reporter::report_err("Error while creating the group!");
-        }
-    }
 
-    //TODO:FIXME:PERMIRESIMI PER COMMENTET QE TE MARRESH ME AJAX
+
+ 
+}
+   //TODO:FIXME:PERMIRESIMI PER COMMENTET QE TE MARRESH ME AJAX
     // if($_POST['functionName']=='fetchMoreComments' && isset($_POST['post_id'])){
  
     //     $post_id=$mysqli->escape_string($_POST['post_id']);
@@ -164,5 +154,3 @@ if(isset($_POST["functionName"])){
 
     //         echo json_encode($comments_html);
     // }
-
-}

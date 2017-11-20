@@ -14,7 +14,7 @@ if(!$user_id=Login::isLoggedIn($mysqli)){
 if(isset($_GET['group']) && !empty($_GET['group'])){
 
    $result=$mysqli->query("select * from t_users
-                          left join t_group_user on t_users.id=t_group_user.id_user
+                          left join t_group_users on t_users.id=t_group_users.id_user
                           where t_users.id=$user_id");
       if($result->num_rows>0){
         $user=$result->fetch_assoc();
@@ -39,7 +39,8 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
     else{
       $isGroupAdmin=false;
     }
-    $GroupPage= new Group($group_name,$mysqli,$group_description,$group_topic,$group_type,$group_image,$isGroupAdmin,$isPartofGroup);
+    $GroupPage= new Group($group_name,$mysqli,$group_description,$group_topic
+    ,$group_type,$group_image,$isGroupAdmin,$isPartofGroup,$firstName,$lastName,$profile_pic);
     
      require 'realGroup.php';
     }

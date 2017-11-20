@@ -74,7 +74,7 @@
 			<div class="create_post">
 			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ask a question</p>
 			</div>
-			<p><textarea class="new_post" rows="4" placeholder="Write something..."></textarea></p>
+			<p><textarea class="new_post_discussion" rows="4" placeholder="Write something..."></textarea></p>
 			<button id="post_btn_comm"><a href="#">Post</a></button>
     	</div>
     	<div class="comments-container">
@@ -330,5 +330,6 @@
 </div>
 </body>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/global.js"></script>
     <script type="text/javascript" src="js/group.js"></script>
 </html>

@@ -1,10 +1,3 @@
-window.onbeforeunload = function() {
-    window.scrollTo(0, 0);
-}
-
-function htmlEntities(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 $(function() {
     //OPEN
     $('[data-popup-open]').on('click', function(e) {
@@ -73,18 +66,16 @@ $('#new_post_form').submit(function(event) {
         success: function(data) {
             if (data != '') {
                 var objData = JSON.parse(data);
+                if (objData.hasOwnProperty('error')) {
+                    $('#new_post_form')[0].reset();
+                    $('.new_post').addClass("error_placeholder").attr("placeholder", objData.error);
+                    return false;
+                }
             }
             if (objData.hasOwnProperty('imgsrc')) {
                 var imgsrc = objData.imgsrc;
                 var new_post_id = objData.post_id;
-                if (typeof(imgsrc) == 'object') {
-                    $('#new_post_form')[0].reset();
-                    $('.new_post').addClass("error_placeholder").attr("placeholder", imgsrc[0]);
-                    setTimeout(function() {
-                        $('.new_post').removeClass("error_placeholder").attr("placeholder", 'What\'s on your mind?');
-                    }, 5000);
-                    return false;
-                }
+
                 if ($('div.Posted_posts div.card:first-child').find('img.img-primary').length) {
                     $("div.Posted_posts").prepend('<div class="card">' + $('div.Posted_posts div.card:first-child').html());
                 } else {
@@ -267,10 +258,6 @@ function viewMoreComments(event) {
     event.target.style.display = 'none';
 }
 
-function findAncestor(el, cls) {
-    while ((el = el.parentElement) && !el.classList.contains(cls));
-    return el;
-}
 //TODO:FIXME:Permiresim Per kommentet nqs ka shum i merr disa nga db-ja,Per me vone;
 // function viewMoreComments(event) {
 //     event.preventDefault();

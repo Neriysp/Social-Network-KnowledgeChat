@@ -10,19 +10,13 @@ class Group{
     private $isGroupAdmin;
     private $group_image;
     private $isPartofGroup;
-    ///SA per prove
-    private $profile_id=63;
-    private $first_name="SKENDER";
-    private $last_name="PATURRI";
-    private $prof_image='null';
-    private $isOwnProfile=true;
-    private $visitor_profile_pic='null';
+    private $visitor_firstName;
+    private $visitor_lastName;
+    private $visitor_profile_pic;
+ 
+     public function __construct($_name,$conn,$_description,$_topic,$_type,$_image,$_isGroupAdmin,$_isPartofGroup,$_firstName,$_lastName,$_profile_pic){
 
-
-    //MBARON PROVA
-     public function __construct($_name,$conn,$_description,$_topic,$_type,$_image,$_isGroupAdmin,$_isPartofGroup){
-
-        $this->group_name=ucfirst($_name);
+        $this->group_name=$_name;
         $this->mysqli=$conn;
         $this->group_description=$_description;
         $this->group_topic=$_topic;
@@ -30,6 +24,10 @@ class Group{
         $this->group_image=$_image;
         $this->isGroupAdmin=$_isGroupAdmin;
         $this->isPartofGroup=$_isPartofGroup;
+        $this->visitor_firstName=ucfirst($_firstName);
+        $this->visitor_lastName=ucfirst($_lastName);
+        $this->visitor_profile_pic=$_profile_pic;
+        
     }
 
      public function getGroupHeader(){
@@ -59,11 +57,13 @@ class Group{
         echo $header_html;
      }
 
-         public function getPosts(){
+     public function getPosts(){
 
-      $posts=$this->mysqli->query("select * from t_posts where user_id=$this->profile_id ORDER BY id DESC");
+      $posts=$this->mysqli->query("select * from t_group_posts
+                                   join t_users on t_users.id=t_group_posts.user_id 
+                                   where t_group_posts.group_name='$this->group_name' ORDER BY t_group_posts.id_post DESC") or die($this->mysqli->error);
     
-      $posts_html=($this->isOwnProfile ? '<div class="card" id="card_of_create_post">
+      $posts_html=($this->isPartofGroup ? '<div class="card" id="card_of_create_post">
 			<div class="create_post">
 			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Create a Post</p>
 			</div>
@@ -75,6 +75,7 @@ class Group{
                       <input type="file" style="display:none;" name="image" id="image" />
                     </span>
                     <input type="hidden" name="action" id="action" value="insert" />
+                    <input type="hidden" name="group" id="group" value='.$this->group_name.' />
                     <span><i class="fa fa-lg fa-youtube-play" aria-hidden="true">
                     </i>
                     </span>
@@ -83,9 +84,9 @@ class Group{
       </form>
             </div>':'').'<div class="Posted_posts">'.'
             <div class="card" style="display:none;">'
-          .($this->prof_image!=null ?
-          '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
-          <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>
+          .($this->visitor_profile_pic!=null ?
+          '<img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'" id="main_pic" class="img-profile profile_picture">':'').'
+          <a href="#" class="user">'.$this->visitor_firstName.' '.$this->visitor_lastName.'</a>
           <br><a  class="time"></a>
           <p class="body"></p>
           <img src="" class="img-primary">
@@ -123,12 +124,13 @@ class Group{
     	</div>';
       if($posts->num_rows>0){
       while($post=mysqli_fetch_array($posts)){
-         $comments_html=$this->getComments($post['id']);
+         $comments_html=$this->getComments($post['id_post']);
           $posts_html .='<div class="card">'
-          .($this->prof_image!=null ?
-          '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
-          <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
-          .($post['group_name']!=null ?
+          .($post['prof_image']!=null ?
+          '<img src="data:image/jpeg;base64,'.base64_encode($post['prof_image']).'" id="main_pic" class="img-profile profile_picture">':'').'
+          <a href="#" class="user">'.$post['first_name'].' '.$post['last_name'].'</a>'
+          //TODO:Kjo do te jete per eventin ne te cilin po e ben kete postim
+          .($post['event_id']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
           <br><a  class="time">'.G::time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
@@ -146,7 +148,7 @@ class Group{
               <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'"
               class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
-              <input type="hidden" name="post_id" class="post_id_hidden" value="'.$post['id'].'" /> </div>
+              <input type="hidden" name="post_id" class="post_id_hidden" value="'.$post['id_post'].'" /> </div>
             </div>
             <div class="comments_w">
             '.$comments_html.'
@@ -158,9 +160,9 @@ class Group{
     }
 
     public function getComments($post_id){
-        $comments=$this->mysqli->query( "select t_comments.id as comm_id,body,likes,nr_replies,first_name,last_name,prof_image,comment_data 
-                                        from t_comments join t_users on t_comments.user_id=t_users.id
-                                            where post_id= 157 ORDER BY t_comments.id DESC");
+        $comments=$this->mysqli->query( "select t_group_comments.id_comment as comm_id,body,likes,nr_replies,first_name,last_name,prof_image,comment_data 
+                                        from t_group_comments join t_users on t_group_comments.user_id=t_users.id
+                                        where t_group_comments.group_post_id= $post_id ORDER BY t_group_comments.id_comment DESC");
       
         $comments_html='<div class="comment_child" style="display:none;">
                 <input type="hidden" name="post_id" class="" value="-1" />
