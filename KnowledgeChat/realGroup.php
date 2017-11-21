@@ -85,6 +85,22 @@
     </div>
 	</div>
 </div>
+<div class="popup" data-popup="popup-joinGroupRequests">
+    <div class="popup-inner">
+      <p><h2>Requests to join the group</h2></p><br>
+  <p>Join any learning group you like:</p>
+  <input type="text" id="searchPopup" onkeyup="FilerGrid()" placeholder="Search for names..">
+  <br>
+	<div id="requested_users">
+	<?php
+	var_dump($pending_users);
+	// while($user=mysqli_fetch_array($result))
+	// 	echo $user['user_id'].'<br>';
+	?>
+	</div>
+     <a class="popup-close" data-popup-close="popup-joinGroupRequests" href="#">x</a>
+    </div>
+</div>
 </body>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="js/global.js"></script>

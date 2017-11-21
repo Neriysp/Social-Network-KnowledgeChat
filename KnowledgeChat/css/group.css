@@ -383,3 +383,32 @@ ul {
 .card {
     margin-left: 35%;
 }
+
+
+/*/*/
+
+#join_requests {
+    position: relative;
+}
+
+#nr_reqto_join {
+    width: 30px;
+    height: 25px;
+    padding-top: 7px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-family: Arial, Sans-Serif;
+    font-size: 20px;
+    display: inline-block;
+    /* transition: ease 0.25s all; */
+    -webkit-transform: translate(50%, -50%);
+    transform: translate(50%, -50%);
+    border-radius: 100%;
+    background-color: rgba(255, 7, 160, 0.938);
+    font-family: Arial, Sans-Serif;
+    font-size: 16px;
+    text-align: center;
+    line-height: 100%;
+    color: #fff;
+}

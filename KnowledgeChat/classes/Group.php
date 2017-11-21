@@ -48,12 +48,14 @@ class Group{
             </p>
             </div>
             </div> 
-            <button id="group_members">View Members</button>'.($this->isGroupAdmin ?
-            '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>':'').
+            '.($this->isGroupAdmin ? ($this->group_type=="closed" ?
+            '<button data-popup-open="popup-joinGroupRequests" id="join_requests"><a id="nr_reqto_join">X</a>Join Requests</button> 
+            <button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>':'') :
+             '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>').
             ($this->isPartofGroup=="part" ? '':($this->isPartofGroup=="notpart" ? ($this->group_type=="open" ?
             '<button id="group_open_join" onclick="joinOpenGroup(event)">Join Group</button>'
             :($this->group_type=="closed" ?'<button onclick="RequestTojoinClosedGroup(event)" id="group_request_join">Request to join Group</button>':''))
-            :'<button style={disabled = true;background-color:#dddddd;}>Request to join Group</button>'));
+            :'<button style="disabled = true;background-color:#dddddd;">Request sent</button>'));
 
             
         echo $header_html;

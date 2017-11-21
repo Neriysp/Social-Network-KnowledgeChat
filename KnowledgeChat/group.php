@@ -29,15 +29,7 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
           $profile_pic='';
           $isPartofGroup="notpart";
         }
-
-    $result=$mysqli->query("select * from t_req_join_closed where user_id=$user_id and group_name='$group_name'") or die($mysqli->error);
-        if($result->num_rows>0){
-          $firstName='';
-          $lastName='';
-          $profile_pic='';
-          $isPartofGroup="requested";
-        }
-
+    $pending_users=[];
     $result=$mysqli->query("SELECT * from t_groups where group_name='$group_name'");
     if($result->num_rows>0){
         $group=$result->fetch_assoc();
@@ -46,7 +38,21 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
         $group_type=$group['group_type'];
         $group_admin_id=$group['group_admin'];
         $group_image=$group['group_image'];
-
+      
+        if($group_type=="closed"){
+          $result=$mysqli->query("select * from t_req_join_closed where group_name='$group_name'") or die($mysqli->error);
+          if($result->num_rows>0){
+            while($request=mysqli_fetch_array($result)){
+              array_push($pending_users,$user_id);
+              if($request['user_id']==$user_id){
+                 $firstName='';
+                 $lastName='';
+                 $profile_pic='';
+                 $isPartofGroup="requested";
+              }
+            }
+          }
+        }
      if($group_admin_id==$user_id){
         $isGroupAdmin=true;
     }
