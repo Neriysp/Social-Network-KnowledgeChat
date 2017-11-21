@@ -48,11 +48,13 @@ class Group{
             </p>
             </div>
             </div> 
-            <button id="group_members">View Members</button>'.($this->isGroupAdmin?
-            '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>'
-            :($this->isPartofGroup?'':($this->group_type=="open"?
-            '<button id="group_open_join">Join Group</button>'
-            :($this->group_type=="closed"?'<button id="group_request_join">Request to join Group</button>':''))));
+            <button id="group_members">View Members</button>'.($this->isGroupAdmin ?
+            '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>':'').
+            ($this->isPartofGroup=="part" ? '':($this->isPartofGroup=="notpart" ? ($this->group_type=="open" ?
+            '<button id="group_open_join" onclick="joinOpenGroup(event)">Join Group</button>'
+            :($this->group_type=="closed" ?'<button onclick="RequestTojoinClosedGroup(event)" id="group_request_join">Request to join Group</button>':''))
+            :'<button style={disabled = true;background-color:#dddddd;}>Request to join Group</button>'));
+
             
         echo $header_html;
      }
@@ -63,7 +65,7 @@ class Group{
                                    join t_users on t_users.id=t_group_posts.user_id 
                                    where t_group_posts.group_name='$this->group_name' ORDER BY t_group_posts.id_post DESC") or die($this->mysqli->error);
     
-      $posts_html=($this->isPartofGroup ? '<div class="card" id="card_of_create_post">
+      $posts_html=($this->isPartofGroup=="part" ? '<div class="card" id="card_of_create_post">
 			<div class="create_post">
 			<p><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Create a Post</p>
 			</div>

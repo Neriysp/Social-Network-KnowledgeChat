@@ -207,7 +207,6 @@ document.getElementById("create_new_group_btn").onclick = function(event) {
         if (description != '') {
             if (topic != '') {
                 if (typeOfGroup != '') {
-                    // name = htmlEntities(name);
                     description = description;
                     topic = topic;
                     addedMembers = addedMembers;

@@ -161,3 +161,58 @@ $('#new_post_form').submit(function(event) {
     });
 
 });
+
+function viewMoreComments(event) {
+    event.preventDefault();
+    var parent = findAncestor(event.target, 'footer').getElementsByClassName('comments_w')[0];
+    var hiddenComments = parent.getElementsByClassName('comment_child_hidden');
+    for (var i = 0; i < hiddenComments.length; i++) {
+        hiddenComments[i].style.display = 'block';
+    }
+    event.target.style.display = 'none';
+}
+
+
+function RequestTojoinClosedGroup(event) {
+
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "reqToJoinGroup", group_name: group_name },
+        success: function(data) {
+            if (data != '') {
+                var objData = JSON.parse(data);
+                if (objData.hasOwnProperty('error')) {
+                    location.reload();
+                } else {
+                    event.target.innerHTML = "Request sent";
+                    event.target.disabled = true;
+                    event.target.style.background = '#dddddd';
+                }
+            }
+        },
+        error: function(err) {
+            console.log("Error while processing request!" + err.toString());
+        }
+    });
+}
+
+function joinOpenGroup(event) {
+
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "JoinOpenGroup", group_name: group_name },
+        success: function(data) {
+            event.target.style.display = "none";
+            location.reload();
+        },
+        error: function(err) {
+            console.log("Error while adding to the group!" + err.toString());
+        }
+    });
+}

@@ -24,19 +24,19 @@
     display: grid;
     grid-template-columns: 1fr 1.5fr 1.5fr 20px 0.5fr;
     grid-gap: 15px;
-    grid-template-areas: "navbar navbar navbar navbar navbar" "group_head main_event suggestions close_sidebar sidebar" "group_rooms group_rooms group_rooms close_sidebar sidebar"
+    grid-template-rows: 0.1fr 1fr 1.2999fr;
+    grid-template-areas: "navbar navbar navbar navbar navbar" "group_head main_event suggestions close_sidebar sidebar" "group_rooms group_rooms group_rooms close_sidebar sidebar";
 }
 
 .group_head {
     grid-area: group_head;
-    border: 1px solid purple;
     border-radius: 5px;
 }
 
 .close_chat {
     grid-area: close_sidebar;
     position: relative;
-    margin-right: -11px;
+    margin-right: -13px;
 }
 
 .suggestions {
@@ -47,7 +47,6 @@
 
 .main_event {
     grid-area: main_event;
-    border: 1px solid purple;
     border-radius: 5px;
     position: relative;
 }
@@ -109,7 +108,8 @@
 .group_rooms {
     margin-top: 30px;
     grid-area: group_rooms;
-    border: 1px solid purple;
+    border-top: 1px solid purple;
+    border-right: 1px solid purple;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
@@ -123,7 +123,6 @@
     grid-area: sidebar;
     border: 1px solid purple;
     border-left: none;
-    border-radius: 5px;
     position: relative;
     margin-left: -10px;
 }

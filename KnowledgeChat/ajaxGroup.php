@@ -114,7 +114,43 @@ if(isset($_POST["functionName"])){
         }
     }   
    
+     if($_POST['functionName']=='reqToJoinGroup' && isset($_POST['group_name']) && !empty($_POST['group_name'])){
+        
+        $user_id=Login::isLoggedIn($mysqli);
+        $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
 
+
+        $result=$mysqli->query("select f_insert_request_join_closed_group($user_id,'$group_name') as rows_inserted");
+
+
+        if($result->num_rows>0){
+            $out=$result->fetch_assoc();
+            $out=$out['rows_inserted'];
+
+            if($out==1){
+                
+                echo json_encode(['success'=>'Request Sent']);
+            }
+            else{
+                echo json_encode(['error'=>'Request already sent!']);
+            }
+        }
+        else{
+            echo json_encode(['error'=>'ERROR!']);
+        }
+
+     }
+     
+     if($_POST['functionName']=='JoinOpenGroup' && isset($_POST['group_name']) && !is_null($_POST['group_name'])){
+       
+        $user_id=Login::isLoggedIn($mysqli);
+        $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
+            
+        $mysqli->query("INSERT into t_group_users(id_user,group_name,join_date) values($user_id,'$group_name',now())") or die($mysqli->error);
+
+        echo json_encode(['success'=>'User added successfully']);
+
+     }
 
  
 }

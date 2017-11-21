@@ -12,18 +12,32 @@ if(!$user_id=Login::isLoggedIn($mysqli)){
 }else{
 
 if(isset($_GET['group']) && !empty($_GET['group'])){
+ $group_name=Sanitize::prepDb($_GET['group'],$mysqli);
 
    $result=$mysqli->query("select * from t_users
                           left join t_group_users on t_users.id=t_group_users.id_user
-                          where t_users.id=$user_id");
+                          where t_users.id=$user_id and t_group_users.group_name='$group_name'") or die($mysqli->error);
       if($result->num_rows>0){
         $user=$result->fetch_assoc();
         $firstName=$user['first_name'];
         $lastName=$user['last_name'];
         $profile_pic=$user['prof_image'];
-        $isPartofGroup=($user['group_name']!=null?true:false);
-      }
-    $group_name=Sanitize::prepDb($_GET['group'],$mysqli);
+        $isPartofGroup=($user['group_name']!=null ? "part":"notpart");
+      } else {
+          $firstName='';
+          $lastName='';
+          $profile_pic='';
+          $isPartofGroup="notpart";
+        }
+
+    $result=$mysqli->query("select * from t_req_join_closed where user_id=$user_id and group_name='$group_name'") or die($mysqli->error);
+        if($result->num_rows>0){
+          $firstName='';
+          $lastName='';
+          $profile_pic='';
+          $isPartofGroup="requested";
+        }
+
     $result=$mysqli->query("SELECT * from t_groups where group_name='$group_name'");
     if($result->num_rows>0){
         $group=$result->fetch_assoc();
