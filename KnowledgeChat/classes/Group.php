@@ -1,5 +1,6 @@
 <?php
-class Group{
+require 'Navbar.php';
+class Group extends Navbar{
 
     private $group_name;
     private $mysqli;
@@ -55,9 +56,11 @@ class Group{
             </div>
             </div> 
             '.($this->isGroupAdmin ? ($this->group_type=="closed" ?
-            '<button data-popup-open="popup-joinGroupRequests" id="join_requests">'.($resultRequest->num_rows>0?'<a id="nr_reqto_join">'.$resultRequest->num_rows.'</a>':'').'Join Requests</button> 
-            <button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>':'') :
-             '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>').
+            '<button data-popup-open="popup-joinGroupRequests" id="join_requests">'.
+            ($resultRequest->num_rows>0?'<a id="nr_reqto_join">'.$resultRequest->num_rows.'</a>':'').'Join Requests</button> 
+            <button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>':
+            '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>') :
+             '').
             ($this->isPartofGroup=="part" ? '':($this->isPartofGroup=="notpart" ? ($this->group_type=="open" ?
             '<button id="group_open_join" onclick="joinOpenGroup(event)">Join Group</button>'
             :($this->group_type=="closed" ?'<button onclick="RequestTojoinClosedGroup(event)" id="group_request_join">Request to join Group</button>':''))
@@ -69,6 +72,9 @@ class Group{
 
      public function getPosts(){
 
+        if((!($this->isPartofGroup=="part")) && $this->group_type=="closed"){
+                echo '<p>Closed group, you have to join the group in order to see the posts!<>';
+        }else{
       $posts=$this->mysqli->query("select * from t_group_posts
                                    join t_users on t_users.id=t_group_posts.user_id 
                                    where t_group_posts.group_name='$this->group_name' ORDER BY t_group_posts.id_post DESC") or die($this->mysqli->error);
@@ -100,16 +106,16 @@ class Group{
           <br><a  class="time"></a>
           <p class="body"></p>
           <img src="" class="img-primary">
-          <div class="footer">
-   			 <div class="controls">
+          <div class="footer">'.($this->isPartofGroup=="part" ?
+            '<div class="controls">
              <a href="#" class="like">
                 <i class="fa fa-thumbs-up" style="margin-right: 5px;" aria-hidden="true"></i>Like</a>
              <a href="#" class="comment">
                 <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
              <a href="#" class="share">
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
-            </div>'.($this->isPartofGroup=="part" ?
-            '<div class="new_comment">
+            </div>
+            <div class="new_comment">
               <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'
               " class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
@@ -145,17 +151,17 @@ class Group{
           <br><a  class="time">'.G::time_elapsed_string($post['post_date']).'</a>
           <p class="body">'.$post['body'].'</p>'.($post['image']!=null ?'
           <img src="data:image/jpeg;base64,'.base64_encode($post['image'] ).'" class="img-primary">':'').
-          ' <div class="footer">
-   			 <div class="controls">
+          ' <div class="footer">'.
+            ($this->isPartofGroup=="part" ?
+            '<div class="controls">
              <a href="#" class="like">
                 <i class="fa fa-thumbs-up" style="margin-right: 5px;" aria-hidden="true"></i>Like</a>
              <a href="#" class="comment">
                 <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
              <a href="#" class="share">
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
-            </div>'.
-            ($this->isPartofGroup=="part" ?
-            '<div class="new_comment">
+            </div>
+            <div class="new_comment">
               <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'"
               class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
@@ -168,6 +174,7 @@ class Group{
         }
       }
       echo $posts_html.'</div>';
+    }
     }
 
     public function getComments($post_id){

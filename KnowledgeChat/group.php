@@ -30,12 +30,11 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
           $isPartofGroup="notpart";
         }
 
-    $result=$mysqli->query("SELECT * from t_groups where group_name='$group_name'");
-    if($result->num_rows>0){
+        $result=$mysqli->query("SELECT * from t_groups where group_name='$group_name'");
         $group=$result->fetch_assoc();
+      if(!($group_type=$group['group_type']=="private" && $isPartofGroup=="notpart")){
         $group_description=$group['group_description'];
         $group_topic=$group['group_topic'];
-        $group_type=$group['group_type'];
         $group_admin_id=$group['group_admin'];
         $group_image=$group['group_image'];
       
@@ -60,7 +59,7 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
      require 'realGroup.php';
     }
     else{
-         Reporter::report_err("Group with this name might not exist!");
+         Reporter::report_err("Group with this name might not exist or it might be private!");
     }
     
  }

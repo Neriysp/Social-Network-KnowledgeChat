@@ -13,7 +13,7 @@
     top: 0px;
     right: 0px;
     width: 5%;
-    min-height: 100vh;
+    height: 100%;
 }
 
 .hide_chat .fa {
@@ -24,7 +24,7 @@
     display: grid;
     grid-template-columns: 1fr 1.5fr 1.5fr 20px 0.5fr;
     grid-gap: 15px;
-    grid-template-rows: 70px 480px auto;
+    grid-template-rows: 70px 480px 1fr;
     grid-template-areas: "navbar navbar navbar navbar navbar" "group_head main_event suggestions close_sidebar sidebar" "group_rooms group_rooms group_rooms close_sidebar sidebar";
 }
 
@@ -37,7 +37,6 @@
     grid-area: close_sidebar;
     position: relative;
     margin-right: -13px;
-    min-height: 200vh;
 }
 
 .suggestions {
@@ -124,6 +123,7 @@
     grid-area: sidebar;
     border: 1px solid purple;
     border-left: none;
+    border-right: none;
     position: relative;
     margin-left: -10px;
 }
