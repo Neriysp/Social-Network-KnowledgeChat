@@ -1,5 +1,4 @@
 <?php
-
 class Group{
 
     private $group_name;
@@ -13,8 +12,10 @@ class Group{
     private $visitor_firstName;
     private $visitor_lastName;
     private $visitor_profile_pic;
- 
-     public function __construct($_name,$conn,$_description,$_topic,$_type,$_image,$_isGroupAdmin,$_isPartofGroup,$_firstName,$_lastName,$_profile_pic){
+    private $resultRequest;
+
+     public function __construct($_name,$conn,$_description,$_topic,$_type,$_image,$_isGroupAdmin,$_isPartofGroup
+     ,$_firstName,$_lastName,$_profile_pic){
 
         $this->group_name=$_name;
         $this->mysqli=$conn;
@@ -26,11 +27,16 @@ class Group{
         $this->isPartofGroup=$_isPartofGroup;
         $this->visitor_firstName=ucfirst($_firstName);
         $this->visitor_lastName=ucfirst($_lastName);
-        $this->visitor_profile_pic=$_profile_pic;
-        
+        $this->visitor_profile_pic=$_profile_pic; 
     }
 
      public function getGroupHeader(){
+
+        $resultRequest=$this->mysqli->query("select * from t_req_join_closed
+                              join t_users on t_req_join_closed.user_id=t_users.id 
+                              where t_req_join_closed.group_name='$this->group_name'");
+        
+        $this->resultRequest=$resultRequest;
 
         $header_html=($this->group_image!=null ?
         '<div class="profile-photo">
@@ -49,7 +55,7 @@ class Group{
             </div>
             </div> 
             '.($this->isGroupAdmin ? ($this->group_type=="closed" ?
-            '<button data-popup-open="popup-joinGroupRequests" id="join_requests"><a id="nr_reqto_join">X</a>Join Requests</button> 
+            '<button data-popup-open="popup-joinGroupRequests" id="join_requests">'.($resultRequest->num_rows>0?'<a id="nr_reqto_join">'.$resultRequest->num_rows.'</a>':'').'Join Requests</button> 
             <button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>':'') :
              '<button id="group_settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</button>').
             ($this->isPartofGroup=="part" ? '':($this->isPartofGroup=="notpart" ? ($this->group_type=="open" ?
@@ -102,13 +108,13 @@ class Group{
                 <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
              <a href="#" class="share">
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
-            </div>
-            <div class="new_comment">
+            </div>'.($this->isPartofGroup=="part" ?
+            '<div class="new_comment">
               <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'
               " class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
               <input type="hidden" name="post_id" class="post_id_hidden" value="-1" /> </div>
-            </div>
+            </div>':'').'
             <div class="comments_w">
                <div class="comment_child" style="display:none;">
                 <input type="hidden" name="post_id" class="" value="-1" />
@@ -147,13 +153,14 @@ class Group{
                 <i class="fa fa-comment" style="margin-right: 5px;" aria-hidden="true"></i>Comment</a>
              <a href="#" class="share">
                 <i class="fa fa-share-alt" style="margin-right: 5px;" aria-hidden="true"></i>Share</a>
-            </div>
-            <div class="new_comment">
+            </div>'.
+            ($this->isPartofGroup=="part" ?
+            '<div class="new_comment">
               <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($this->visitor_profile_pic).'"
               class="img-profile profile_picture" style="width:30px;height:30px;margin-top:3px;"></div>
               <div class="input"><textarea class="new_comment_area" onkeypress="newcomment(event)" placeholder="Write a comment..."></textarea>
               <input type="hidden" name="post_id" class="post_id_hidden" value="'.$post['id_post'].'" /> </div>
-            </div>
+            </div>':'').'
             <div class="comments_w">
             '.$comments_html.'
           </div>
@@ -224,6 +231,34 @@ class Group{
             return ($comments->num_rows<=3?$comments_html.'</div>':$comments_html.'
             </div>
             <a  class="view_more_comments" onclick="viewMoreComments(event)">View '.$nrOfMoreComments.' more comments</a>') ;
+    }
+
+    public function popupRequestsToJoinGroup(){
+       
+        $popupHtml='<div class="popup" data-popup="popup-joinGroupRequests">
+    <div class="popup-inner">
+      <p><h2>Requests to join the group</h2></p><br>
+	<div id="requested_users">';
+
+         while($request=mysqli_fetch_array($this->resultRequest)){
+
+           $popupHtml.='<div class="popup_tojoin_row">
+                    <img src="data:image/jpeg;base64,'.base64_encode($request['prof_image']).'" class="prof_req_photo">  
+                    <div id="name_requester">'.$request['first_name'].' '.$request['last_name'].'</div>
+                    <div id="accept_reject_btn">
+                    <button  onclick="acceptReq(event)">Accept</button>
+                    <button  onclick="rejectReq(event)">Reject</button>  
+                    <input type="hidden" name="user_id" id="user_id" value="'.$request['user_id'].'" />  
+                    </div>
+                 </div>';
+            }
+     $popupHtml.='</div>
+                <a class="popup-close" data-popup-close="popup-joinGroupRequests">x</a>
+            </div>
+        </div>';
+    
+    echo $popupHtml;
+
     }
 
 }

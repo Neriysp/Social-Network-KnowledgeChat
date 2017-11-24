@@ -465,3 +465,17 @@ td {
 
 
 /* Ketu mbarojne ato qe shtova per ti bere te perbashketa */
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(109, 50, 205);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ba1c8b;
+}

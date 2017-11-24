@@ -216,3 +216,45 @@ function joinOpenGroup(event) {
         }
     });
 }
+
+function acceptReq(event) {
+    var user_id = event.target.parentElement.querySelector('#user_id').value;
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "AcceptReqClosedGroup", user_id: user_id, group_name: group_name },
+        success: function(data) {
+            findAncestor(event.target, 'popup_tojoin_row').innerHTML = "User Added Successfully!";
+            if (parseInt(document.querySelector('#nr_reqto_join').innerHTML) > 1) {
+                document.querySelector('#nr_reqto_join').innerHTML = parseInt(document.querySelector('#nr_reqto_join').innerHTML) - 1;
+            } else {
+                document.querySelector('#nr_reqto_join').style.display = "none";
+            }
+        },
+        error: function(err) {
+            console.log("Error while adding to the group!" + err.toString());
+        }
+    });
+}
+
+function rejectReq(event) {
+    var user_id = event.target.parentElement.querySelector('#user_id').value;
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "RejectReqClosedGroup", user_id: user_id, group_name: group_name },
+        success: function(data) {
+            findAncestor(event.target, 'popup_tojoin_row').innerHTML = "User Recejted!";
+            if (parseInt(document.querySelector('#nr_reqto_join').innerHTML) > 1) {
+                document.querySelector('#nr_reqto_join').innerHTML = parseInt(document.querySelector('#nr_reqto_join').innerHTML) - 1;
+            } else {
+                document.querySelector('#nr_reqto_join').style.display = "none";
+            }
+        },
+        error: function(err) {
+            console.log("Error while rejecting to the group!" + err.toString());
+        }
+    });
+}

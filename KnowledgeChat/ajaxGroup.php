@@ -141,7 +141,7 @@ if(isset($_POST["functionName"])){
 
      }
      
-     if($_POST['functionName']=='JoinOpenGroup' && isset($_POST['group_name']) && !is_null($_POST['group_name'])){
+     if($_POST['functionName']=='JoinOpenGroup' && isset($_POST['group_name']) && !empty($_POST['group_name'])){
        
         $user_id=Login::isLoggedIn($mysqli);
         $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
@@ -152,7 +152,35 @@ if(isset($_POST["functionName"])){
 
      }
 
- 
+ if($_POST['functionName']=='AcceptReqClosedGroup' && isset($_POST['group_name']) && !empty($_POST['group_name'])
+     && isset($_POST['user_id']) && !empty($_POST['user_id'])){
+       
+        $user_id=Login::isLoggedIn($mysqli);
+        $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
+        $user_id=Sanitize::prepDb($_POST['user_id'],$mysqli);  
+       if( $mysqli->query("DELETE from t_req_join_closed where user_id=$user_id and group_name='$group_name'") or die($mysqli->error)){  
+
+        $mysqli->query("INSERT into t_group_users(id_user,group_name,join_date) values($user_id,'$group_name',now())") or die($mysqli->error);
+
+       }
+        echo json_encode(['success'=>'User added successfully']);
+
+     }
+     
+     if($_POST['functionName']=='RejectReqClosedGroup' && isset($_POST['group_name']) && !empty($_POST['group_name'])
+     && isset($_POST['user_id']) && !empty($_POST['user_id'])){
+       
+        $user_id=Login::isLoggedIn($mysqli);
+        $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
+        $user_id=Sanitize::prepDb($_POST['user_id'],$mysqli);  
+       if( $mysqli->query("DELETE from t_req_join_closed where user_id=$user_id and group_name='$group_name'") or die($mysqli->error)){  
+        //FIXME:GATI PER KUR TE KRIJOHEN NOTIFICATIONS
+        // $mysqli->query("INSERT into t_notifications(id_user,body,notification_date) values($user_id,'You were rejected from group'.'$group_name'
+        // ,now())") or die($mysqli->error);
+       }
+        echo json_encode(['success'=>'User rejected successfully']);
+
+     }
 }
    //TODO:FIXME:PERMIRESIMI PER COMMENTET QE TE MARRESH ME AJAX
     // if($_POST['functionName']=='fetchMoreComments' && isset($_POST['post_id'])){
