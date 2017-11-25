@@ -73,7 +73,7 @@ class Group extends Navbar{
      public function getPosts(){
 
         if((!($this->isPartofGroup=="part")) && $this->group_type=="closed"){
-                echo '<p>Closed group, you have to join the group in order to see the posts!<>';
+                echo '<p>Closed group, you have to join the group in order to see the posts!</p>';
         }else{
       $posts=$this->mysqli->query("select * from t_group_posts
                                    join t_users on t_users.id=t_group_posts.user_id 

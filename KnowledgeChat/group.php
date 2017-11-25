@@ -32,7 +32,8 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
 
         $result=$mysqli->query("SELECT * from t_groups where group_name='$group_name'");
         $group=$result->fetch_assoc();
-      if(!($group_type=$group['group_type']=="private" && $isPartofGroup=="notpart")){
+      if(!($group['group_type']=="private" && $isPartofGroup=="notpart")){
+        $group_type=$group['group_type'];
         $group_description=$group['group_description'];
         $group_topic=$group['group_topic'];
         $group_admin_id=$group['group_admin'];

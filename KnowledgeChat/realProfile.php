@@ -13,7 +13,7 @@
 
 <body>
 	<div class="wrapper">
-	<?=	$UserProfile->getNavbar($user_id);?>
+	<?=	$UserProfile->getNavbar($user_id,$mysqli);?>
 	<div class="sidebar box">
 	<?=$UserProfile->getUserData();?>
 </div>

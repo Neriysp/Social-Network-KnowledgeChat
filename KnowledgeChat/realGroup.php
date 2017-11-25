@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div class="wrapper">
-	<?= $GroupPage->getNavbar($user_id)?>
+	<?= $GroupPage->getNavbar($user_id,$mysqli)?>
     <div class="close_chat">
     <button class="hide_chat">
     <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
