@@ -14,6 +14,7 @@ class Group extends Navbar{
     private $visitor_lastName;
     private $visitor_profile_pic;
     private $resultRequest;
+    private $eventHistory;
 
      public function __construct($_name,$conn,$_description,$_topic,$_type,$_image,$_isGroupAdmin,$_isPartofGroup
      ,$_firstName,$_lastName,$_profile_pic){
@@ -267,5 +268,80 @@ class Group extends Navbar{
     echo $popupHtml;
 
     }
+      public function getChatSidebar()
+    {
+       $result=$this->mysqli->query("SELECT * from t_group_users
+                                    join t_users on t_group_users.id_user=t_users.id 
+                                    where group_name='$this->group_name'");
+        $sidebarHtml='<ul id="chatUl">';
+
+       while($user=mysqli_fetch_array($result)){
+            $sidebarHtml.=' <li><a href=profile.php?user='.$user['id_user']
+            .'><img src="data:image/jpeg;base64,'.base64_encode($user['prof_image']).'" class="prof_req_photo_chat">'.$user['first_name'].' '.$user['last_name'].'</a></li>';
+        }
+        $sidebarHtml.='</ul>';
+
+
+        echo $sidebarHtml;
+    }
+
+    public function getEvents(){
+        $historyEventHtml='<ul class="event_history_data">';
+
+        $eventHtml='<div class="live_event"> 
+            <div class="create_post">
+            <p><i class="fa fa-calendar" aria-hidden="true"></i>  Live event</p>
+            </div>
+            <div id="head_event"><b>Task:</b>';
+
+            $result=$this->mysqli->query("SELECT * from t_events
+                                          join t_users on t_users.id=t_events.suggested_by
+                                          where t_events.group_name='$this->group_name'");
+
+            while($event=mysqli_fetch_array($result)){
+                if($event['state']=="progress"){
+                    $eventHtml.=$event['task'].'
+            <div id="created_date" class="time">'.G::time_elapsed_string($event['event_date']).'</div></div>
+            <div id="difficulty_event"><b>Difficulty:</b>
+            <span style="background-color:'.($event['difficulty']=="medium"?'yellow':($event['difficulty']=="hard"?'red':'green')).'">
+            '.ucfirst($event['difficulty']).'</span></div> 
+            <div id="suggested_by">Suggested by:'.$event['first_name'].' '.$event['last_name'].'</div>
+            '.($this->isGroupAdmin?'<button class="complete_event">Complete Event</button>':
+            '<button class="mark_event_done">Mark as done</button>').'
+            </div>';
+                }else{
+                    $historyEventHtml.='
+                    <li><div class="task"><b>Task: </b>'.$event['task'].'</div><div class="difficulty"><b>Difficulty:</b>
+                    <span style="background-color:'.($event['difficulty']=="medium"?'yellow':($event['difficulty']=="hard"?'red':'green')).'">
+                    '.ucfirst($event['difficulty']).'</span></div>
+                    <div class="suggested_by">Suggested by:'.$event['first_name'].' '.$event['last_name'].'</div>
+                    </li>';
+                }
+            }
+        $this->eventHistory=$historyEventHtml;
+        $nextEventVoteHtml='
+        <div class="next_event_vote">
+            <div class="create_post">
+            <p><i class="fa fa-plus" aria-hidden="true"></i>  Next event vote</p>
+            </div>
+        <button class="event_history" data-popup-open="popup-eventHistory">Event history</button>
+        <button class="suggest_main_event">Suggest next event</button>
+        </div>';
+        echo $eventHtml.$nextEventVoteHtml;
+    }
+
+    public function getPopupEventHistory(){
+
+        $popupEventHistory='
+        <div class="popup" data-popup="popup-eventHistory">
+            <div class="popup-inner">
+                '.$this->eventHistory.'
+                <a class="popup-close" data-popup-close="popup-eventHistory" href="#">x</a>
+            </div>
+        </div>';
+
+        echo $popupEventHistory;
+    }
+
 
 }

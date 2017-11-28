@@ -258,3 +258,11 @@ function rejectReq(event) {
         }
     });
 }
+
+function chatScroll() {
+    if (document.documentElement.scrollTop > 70) {
+        document.getElementById("chatUl").className = "top0";
+    } else {
+        document.getElementById("chatUl").className = "";
+    }
+}

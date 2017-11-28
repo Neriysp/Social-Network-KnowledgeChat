@@ -15,14 +15,14 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
  $group_name=Sanitize::prepDb($_GET['group'],$mysqli);
 
    $result=$mysqli->query("select * from t_users
-                          left join t_group_users on t_users.id=t_group_users.id_user
-                          where t_users.id=$user_id and t_group_users.group_name='$group_name'") or die($mysqli->error);
+                           join t_group_users on t_users.id=t_group_users.id_user
+                          where t_group_users.id_user=$user_id and t_group_users.group_name='$group_name'") or die($mysqli->error);
       if($result->num_rows>0){
         $user=$result->fetch_assoc();
         $firstName=$user['first_name'];
         $lastName=$user['last_name'];
         $profile_pic=$user['prof_image'];
-        $isPartofGroup=($user['group_name']!=null ? "part":"notpart");
+        $isPartofGroup="part";
       } else {
           $firstName='';
           $lastName='';

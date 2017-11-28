@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/group.css">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
-<body>
+<body onscroll="chatScroll()">
 	<div class="wrapper">
 	<?= $GroupPage->getNavbar($user_id,$mysqli)?>
     <div class="close_chat">
@@ -18,29 +18,16 @@
     </div>    
 	<!--Chat Sidebar-->
 	<div class="sidebar box">
+    <?= $GroupPage->getChatSidebar()?>
 
 	</div>
 	<!--Header_Group-->
 	<div class="group_head box">
-    <?= $GroupPage->getGroupHeader()?>
+    <?= $GroupPage->getGroupHeader()?> 
 	</div>
 	<!--Main Event-->
 	<div class="main_event box">
-		<div class="live_event"> 
-            <div class="create_post">
-            <p><i class="fa fa-calendar" aria-hidden="true"></i>  Live event</p>
-            </div>
-            <p id="head_event"><h3>Task: Create a HTML 5 page using div-s!</h3></p>
-            <p id="difficulty_event"><h4>Difficulty:Medium</h4></p>   
-        <button class="mark_event_done">Mark as done</button>
-        </div>
-        <div class="next_event_vote">
-            <div class="create_post">
-            <p><i class="fa fa-plus" aria-hidden="true"></i>  Next event vote</p>
-            </div>
-        <button class="event_history">Event history</button>
-        <button class="suggest_main_event">Suggest next event</button>
-        </div>
+		<?= $GroupPage->getEvents()?>
 	</div>
     <div class="suggestions">
         Suggested groups or ads:
@@ -66,6 +53,7 @@
     </div>
 	</div>
 </div>
+  <?= $GroupPage->getPopupEventHistory()?>
 </body>
 <?=(($isGroupAdmin && $group_type=="closed")?$GroupPage->popupRequestsToJoinGroup():'');?>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
