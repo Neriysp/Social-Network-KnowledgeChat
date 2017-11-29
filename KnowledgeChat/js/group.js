@@ -311,12 +311,16 @@ function acceptSug(event) {
         method: "POST",
         data: { functionName: "AcceptEventSuggestion", event_suggestion_id: event_suggestion_id },
         success: function(data) {
-            findAncestor(event.target, 'parent_sugg').innerHTML = "Suggestion added to next event vote!";
+            var element = findAncestor(event.target, 'parent_sugg');
+            element.innerHTML = "Suggestion added to next event vote!";
             if (parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) > 1) {
                 document.querySelector('#nr_reqto_join_sugg').innerHTML = parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) - 1;
             } else {
                 document.querySelector('#nr_reqto_join_sugg').style.display = "none";
             }
+            setTimeout(() => {
+                element.innerHTML = "";
+            }, 2000);
         },
         error: function(err) {
             console.log("Error while submiting the event suggestion!" + err.toString());
@@ -332,12 +336,17 @@ function rejectSug(event) {
         method: "POST",
         data: { functionName: "RejectEventSuggestion", event_suggestion_id: event_suggestion_id },
         success: function(data) {
-            findAncestor(event.target, 'parent_sugg').innerHTML = "Suggestion Recejted!";
+            var element = findAncestor(event.target, 'parent_sugg');
+            element.innerHTML = "Suggestion Recejted!";
             if (parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) > 1) {
                 document.querySelector('#nr_reqto_join_sugg').innerHTML = parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) - 1;
+
             } else {
                 document.querySelector('#nr_reqto_join_sugg').style.display = "none";
             }
+            setTimeout(() => {
+                element.innerHTML = "";
+            }, 2000);
         },
         error: function(err) {
             console.log("Error while submiting the event suggestion!" + err.toString());
