@@ -238,7 +238,7 @@ function acceptReq(event) {
     });
 }
 
-function rejectReq(event) {
+function rejectReq(event) { //FIXME:Permiresim fut req_to_join_id direkt ose jo :P
     var user_id = event.target.parentElement.querySelector('#user_id').value;
     var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
     $.ajax({
@@ -265,4 +265,82 @@ function chatScroll() {
     } else {
         document.getElementById("chatUl").className = "";
     }
+}
+
+function suggestEvent(event) {
+
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+    var task = document.querySelector('#suggest_event_task').value;
+    if (document.querySelector('input[name="type_of_event"]:checked') != null) {
+
+        var difficulty = document.querySelector('input[name="type_of_event"]:checked').value;
+    }
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "SuggestEvent", task: task, difficulty: difficulty, group_name: group_name },
+        success: function(data) {
+            if (data != '') {
+                var objData = JSON.parse(data);
+                if (objData.hasOwnProperty('success')) {
+                    var element = findAncestor(event.target, 'container_suggestEvent');
+                    var originalHtml = element.innerHTML;
+                    element.innerHTML = objData.success;
+
+                    setTimeout(() => {
+                        document.getElementsByClassName('container_suggestEvent')[0].innerHTML = originalHtml
+                        if (objData.hasOwnProperty('admin')) {
+                            location.reload();
+                        }
+                    }, 1500);
+                }
+            }
+        },
+        error: function(err) {
+            console.log("Error while suggesting event!" + err.toString());
+        }
+    });
+}
+
+function acceptSug(event) {
+    var event_suggestion_id = event.target.parentElement.querySelector('#event_suggestion_id').value;
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "AcceptEventSuggestion", event_suggestion_id: event_suggestion_id },
+        success: function(data) {
+            findAncestor(event.target, 'parent_sugg').innerHTML = "Suggestion added to next event vote!";
+            if (parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) > 1) {
+                document.querySelector('#nr_reqto_join_sugg').innerHTML = parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) - 1;
+            } else {
+                document.querySelector('#nr_reqto_join_sugg').style.display = "none";
+            }
+        },
+        error: function(err) {
+            console.log("Error while submiting the event suggestion!" + err.toString());
+        }
+    });
+}
+
+function rejectSug(event) {
+    var event_suggestion_id = event.target.parentElement.querySelector('#event_suggestion_id').value;
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "RejectEventSuggestion", event_suggestion_id: event_suggestion_id },
+        success: function(data) {
+            findAncestor(event.target, 'parent_sugg').innerHTML = "Suggestion Recejted!";
+            if (parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) > 1) {
+                document.querySelector('#nr_reqto_join_sugg').innerHTML = parseInt(document.querySelector('#nr_reqto_join_sugg').innerHTML) - 1;
+            } else {
+                document.querySelector('#nr_reqto_join_sugg').style.display = "none";
+            }
+        },
+        error: function(err) {
+            console.log("Error while submiting the event suggestion!" + err.toString());
+        }
+    });
 }

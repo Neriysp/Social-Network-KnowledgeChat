@@ -155,7 +155,6 @@ if(isset($_POST["functionName"])){
  if($_POST['functionName']=='AcceptReqClosedGroup' && isset($_POST['group_name']) && !empty($_POST['group_name'])
      && isset($_POST['user_id']) && !empty($_POST['user_id'])){
        
-        $user_id=Login::isLoggedIn($mysqli);
         $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
         $user_id=Sanitize::prepDb($_POST['user_id'],$mysqli);  
        if( $mysqli->query("DELETE from t_req_join_closed where user_id=$user_id and group_name='$group_name'") or die($mysqli->error)){  
@@ -170,7 +169,6 @@ if(isset($_POST["functionName"])){
      if($_POST['functionName']=='RejectReqClosedGroup' && isset($_POST['group_name']) && !empty($_POST['group_name'])
      && isset($_POST['user_id']) && !empty($_POST['user_id'])){
        
-        $user_id=Login::isLoggedIn($mysqli);
         $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
         $user_id=Sanitize::prepDb($_POST['user_id'],$mysqli);  
        if( $mysqli->query("DELETE from t_req_join_closed where user_id=$user_id and group_name='$group_name'") or die($mysqli->error)){  
@@ -179,6 +177,49 @@ if(isset($_POST["functionName"])){
         // ,now())") or die($mysqli->error);
        }
         echo json_encode(['success'=>'User rejected successfully']);
+
+     }
+      if($_POST['functionName']=='SuggestEvent' && isset($_POST['group_name']) && !empty($_POST['group_name'])
+     && isset($_POST['difficulty']) && !empty($_POST['difficulty'])&& isset($_POST['task']) && !empty($_POST['task'])){
+       
+        $user_id=Login::isLoggedIn($mysqli);
+        $group_name=Sanitize::prepDb($_POST['group_name'],$mysqli);
+        $difficulty=Sanitize::prepDb($_POST['difficulty'],$mysqli);  
+        $task=Sanitize::prepDb($_POST['task'],$mysqli);  
+        $mysqli->query("INSERT into t_next_event_suggestions(group_name,user_id,task,difficulty) 
+                        values('$group_name',$user_id,'$task','$difficulty')") or die($mysqli->error); 
+
+        $result=$mysqli->query("SELECT group_admin from t_groups where group_name='$group_name'") or die($mysqli->error); 
+        $admin=$result->fetch_assoc()['group_admin'];
+        if($admin==$user_id){
+            echo json_encode(['success'=>'Suggesting submited successfully!','admin'=>true]);
+        }
+        else
+        echo json_encode(['success'=>'Suggesting submited successfully!']);
+
+     }
+      if($_POST['functionName']=='AcceptEventSuggestion' 
+      && isset($_POST['event_suggestion_id']) && !empty($_POST['event_suggestion_id'])){
+       
+        $event_suggestion_id=Sanitize::prepDb($_POST['event_suggestion_id'],$mysqli);
+
+        $mysqli->query("INSERT into t_next_event(task,difficulty,user_id,group_name)
+                        select task,difficulty,user_id,group_name from t_next_event_suggestions where id_event_suggestion=$event_suggestion_id") 
+                        or die($mysqli->error); 
+
+        $mysqli->query("DELETE from t_next_event_suggestions where id_event_suggestion = $event_suggestion_id") or die($mysqli->error);
+    
+        echo json_encode(['success'=>'Suggesting accepted successfully!']);
+
+     }
+      if($_POST['functionName']=='RejectEventSuggestion' 
+      && isset($_POST['event_suggestion_id']) && !empty($_POST['event_suggestion_id'])){
+       
+        $event_suggestion_id=Sanitize::prepDb($_POST['event_suggestion_id'],$mysqli);
+
+         $mysqli->query("DELETE from t_next_event_suggestions where id_event_suggestion= $event_suggestion_id") or die($mysqli->error); 
+    
+        echo json_encode(['success'=>'Suggesting rejected successfully!']);
 
      }
 }

@@ -383,7 +383,8 @@
             position: relative;
         }
         
-        #nr_reqto_join {
+        #nr_reqto_join,
+        #nr_reqto_join_sugg {
             width: 30px;
             height: 25px;
             padding-top: 7px;
@@ -531,17 +532,20 @@
             margin-left: 10px;
         }
         
-        .event_history_data li:first-child {
+        .event_history_data li:first-child,
+        .next_event_suggestions li:first-child {
             border-top: none;
         }
         
-        .event_history_data li {
+        .event_history_data li,
+        .next_event_suggestions li {
             padding: 10px;
             border-top: 1px solid #e5e5e5;
             position: relative;
         }
         
-        .event_history_data {
+        .event_history_data,
+        .next_event_suggestions {
             overflow: auto;
             max-height: 55vh;
         }
@@ -565,7 +569,46 @@
             padding: 5px;
         }
         
+        .difficulty span {
+            border-radius: 10px;
+            padding: 3px;
+        }
+        
         .task {
             padding: 5px;
             font-size: 18px;
+        }
+        
+        .container_suggestEvent label {
+            padding: 15px;
+            display: block;
+            margin: 5px;
+        }
+        
+        .radlabel {
+            border: 1px solid #e5e5e5;
+        }
+        
+        #next_event_sug {
+            position: relative;
+        }
+        
+        #suggestion_action_btn {
+            float: right;
+            margin-top: -5px;
+        }
+        
+        .suggested_by_sug {
+            position: absolute;
+            padding: 10px;
+            top: 0px;
+            right: 10px;
+            color: #90949c;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        
+        .suggested_by_sug:hover {
+            color: #5d88d8;
+            cursor: pointer;
         }

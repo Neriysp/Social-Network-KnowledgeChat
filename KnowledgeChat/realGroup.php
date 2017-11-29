@@ -53,7 +53,9 @@
     </div>
 	</div>
 </div>
-  <?= $GroupPage->getPopupEventHistory()?>
+  <?= $GroupPage->getPopupEventHistory();
+      $GroupPage->getPopupSuggestEvent();
+      $GroupPage->getPopupNextEventSuggestions();?>
 </body>
 <?=(($isGroupAdmin && $group_type=="closed")?$GroupPage->popupRequestsToJoinGroup():'');?>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
