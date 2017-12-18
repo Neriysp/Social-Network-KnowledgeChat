@@ -222,6 +222,107 @@ if(isset($_POST["functionName"])){
         echo json_encode(['success'=>'Suggesting rejected successfully!']);
 
      }
+     if($_POST['functionName']=='upVoteEventSuggestion' 
+        && isset($_POST['event_suggestion_id']) && !empty($_POST['event_suggestion_id'])
+        && isset($_POST['group_name']) && !empty($_POST['group_name'])){
+
+        $user_id=Login::isLoggedIn($mysqli);
+        $event_suggestion_id=Sanitize::prepDb($_POST['event_suggestion_id'],$mysqli);
+        $group_name=Sanitize::prepDb($_POST["group_name"],$mysqli);
+
+            $result=$mysqli->query("SELECT * from t_new_event_vote
+                             where event_suggestion_id= $event_suggestion_id and user_id=$user_id") or die($mysqli->error); 
+
+        if ($result->num_rows==0){
+             $mysqli->query("INSERT into t_new_event_vote(event_suggestion_id,user_id,vote,group_name) 
+                             values ($event_suggestion_id,$user_id,'up','$group_name')") or die($mysqli->error); 
+            }
+        else{
+             $result=$mysqli->query("SELECT * from t_new_event_vote
+                             where event_suggestion_id= $event_suggestion_id and user_id=$user_id
+                             and vote='down'") or die($mysqli->error); 
+            if ($result->num_rows>0){
+                 $mysqli->query("UPDATE t_new_event_vote set vote='up'
+                            where event_suggestion_id= $event_suggestion_id and user_id=$user_id")
+             or die($mysqli->error); 
+
+            }else{
+            $mysqli->query("DELETE from t_new_event_vote 
+                            where event_suggestion_id= $event_suggestion_id and user_id=$user_id")
+             or die($mysqli->error); 
+            }
+        }
+        
+        echo json_encode(['success'=>'Vote added successfully!']);
+
+     }
+      if($_POST['functionName']=='downVoteEventSuggestion' 
+        && isset($_POST['event_suggestion_id']) && !empty($_POST['event_suggestion_id'])
+        && isset($_POST['group_name']) && !empty($_POST['group_name'])){
+
+        $user_id=Login::isLoggedIn($mysqli);
+        $event_suggestion_id=Sanitize::prepDb($_POST['event_suggestion_id'],$mysqli);
+        $group_name=Sanitize::prepDb($_POST["group_name"],$mysqli);
+
+            $result=$mysqli->query("SELECT * from t_new_event_vote
+                                    where event_suggestion_id= $event_suggestion_id and user_id=$user_id") or die($mysqli->error); 
+
+        if ($result->num_rows==0){
+             $mysqli->query("INSERT into t_new_event_vote(event_suggestion_id,user_id,vote,group_name) 
+                             values ($event_suggestion_id,$user_id,'down','$group_name')") or die($mysqli->error); 
+            }
+        else{
+             $result=$mysqli->query("SELECT * from t_new_event_vote
+                                     where event_suggestion_id= $event_suggestion_id and user_id=$user_id
+                                     and vote='up'") or die($mysqli->error); 
+            if ($result->num_rows>0){
+                 $mysqli->query("UPDATE t_new_event_vote set vote='down'
+                                 where event_suggestion_id= $event_suggestion_id and user_id=$user_id")
+             or die($mysqli->error); 
+
+            }else{
+            $mysqli->query("DELETE from t_new_event_vote 
+                            where event_suggestion_id= $event_suggestion_id and user_id=$user_id")
+             or die($mysqli->error); 
+            }
+        }
+        
+        echo json_encode(['success'=>'Vote added successfully!']);
+
+     }
+     if($_POST['functionName']=='newMainEvent' && isset($_POST['group_name']) && !empty($_POST['group_name'])){
+
+        //For control for any hack if its the admin
+       // $user_id=Login::isLoggedIn($mysqli);
+        $group_name=Sanitize::prepDb($_POST["group_name"],$mysqli);
+					
+            $result=$mysqli->query("SELECT event_suggestion_id,max(c) 
+                                    from(
+                                      SELECT event_suggestion_id,count(user_id) as c
+					                  from t_new_event_vote
+                                      where vote='up' and group_name='$group_name'
+                                      group by event_suggestion_id
+                                      ) as a ") or die($mysqli->error); 
+                                      
+            $newMainEventId=$result->fetch_assoc()['event_suggestion_id'];
+
+            $mysqli->query("UPDATE t_events set state='done' where group_name='$group_name' and state='inProgress'") or die($mysqli->error); 
+
+           $mysqli->query("INSERT into t_events(task,event_date,group_name,state,difficulty,suggested_by)
+                           select t_next_event.task,now(),t_next_event.group_name,'inProgress'
+                           ,t_next_event.difficulty,t_next_event.user_id
+                           from t_new_event_vote
+                           join t_next_event on t_next_event.id_next_event=t_new_event_vote.event_suggestion_id
+                           where t_new_event_vote.event_suggestion_id=$newMainEventId") or die($mysqli->error); 
+
+            $mysqli->query("DELETE from t_new_event_vote
+                            where event_suggestion_id= $newMainEventId") or die($mysqli->error);  
+            $mysqli->query("DELETE from t_next_event
+                            where id_next_event= $newMainEventId") or die($mysqli->error);         
+        
+        echo json_encode(['success'=>'Vote added successfully!']);
+
+     }
 }
    //TODO:FIXME:PERMIRESIMI PER COMMENTET QE TE MARRESH ME AJAX
     // if($_POST['functionName']=='fetchMoreComments' && isset($_POST['post_id'])){

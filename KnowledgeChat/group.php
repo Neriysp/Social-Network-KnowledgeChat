@@ -55,7 +55,7 @@ if(isset($_GET['group']) && !empty($_GET['group'])){
       $isGroupAdmin=false;
     }
     $GroupPage= new Group($group_name,$mysqli,$group_description,$group_topic
-    ,$group_type,$group_image,$isGroupAdmin,$isPartofGroup,$firstName,$lastName,$profile_pic);
+    ,$group_type,$group_image,$isGroupAdmin,$isPartofGroup,$firstName,$lastName,$profile_pic,$user_id);
     
      require 'realGroup.php';
     }

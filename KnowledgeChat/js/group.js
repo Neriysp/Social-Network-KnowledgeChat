@@ -353,3 +353,88 @@ function rejectSug(event) {
         }
     });
 }
+
+//Voting for event
+
+function upVote(e){
+
+    var element = findAncestor(event.target, 'parent_sugg');
+    var id = element.querySelector('#id_next_event').value;
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "upVoteEventSuggestion", event_suggestion_id: id, group_name: group_name },
+        success: function (data) {
+
+            
+            var childElement = element.getElementsByClassName('ThumbDown')[0];
+            if (childElement.className.includes('clicked')) {
+                childElement.style.color = "black";
+                childElement.className = childElement.className.split(' clicked')[0];
+            }
+            if (!e.target.className.includes('clicked')) {
+                e.target.style.color = "rgb(64, 128, 255)";
+                e.target.className += " clicked";
+            }
+            else {
+                e.target.style.color = "black";
+                e.target.className = e.target.className.split(' clicked')[0];
+            }
+
+        },
+        error: function (err) {
+            console.log("Error while submiting the event vote!" + err.toString());
+        }
+    });
+}
+function downVote(e) {
+
+    var element = findAncestor(event.target, 'parent_sugg');
+    var id = element.querySelector('#id_next_event').value;
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "downVoteEventSuggestion", event_suggestion_id: id, group_name: group_name },
+        success: function (data) {
+           
+            var childElement = element.getElementsByClassName('ThumbUp')[0];
+            if (childElement.className.includes('clicked')) {
+                childElement.style.color = "black";
+                childElement.className = childElement.className.split(' clicked')[0];
+            } 
+
+            if (!e.target.className.includes('clicked')) {
+                e.target.style.color = "rgb(64, 128, 255)";
+                e.target.className += " clicked";
+            }
+            else {
+                e.target.style.color = "black";
+                e.target.className = e.target.className.split(' clicked')[0];
+            }
+        },
+        error: function (err) {
+            console.log("Error while submiting the event vote!" + err.toString());
+        }
+    });
+}
+
+function markEventDone(){
+
+    var group_name = window.location.search.split('=')[window.location.search.split('=').length - 1];
+
+    $.ajax({
+        url: "ajaxGroup.php",
+        method: "POST",
+        data: { functionName: "newMainEvent", group_name: group_name },
+        success: function (data) {
+            location.reload();
+        },
+        error: function (err) {
+            console.log("Error while creating the new main event!" + err.toString());
+        }
+    });
+}

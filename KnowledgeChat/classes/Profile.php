@@ -124,7 +124,7 @@ class Profile extends Navbar{
             <div class="card" style="display:none;">'
           .($this->prof_image!=null ?
           '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
-          <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>
+          <a href="#" class="user">'.ucfirst($this->first_name).' '.ucfirst($this->last_name).'</a>
           <br><a  class="time"></a>
           <p class="body"></p>
           <img src="" class="img-primary">
@@ -166,7 +166,7 @@ class Profile extends Navbar{
           $posts_html .='<div class="card">'
           .($this->prof_image!=null ?
           '<img src="data:image/jpeg;base64,'.base64_encode($this->prof_image).'" id="main_pic" class="img-profile profile_picture">':'').'
-          <a href="#" class="user">'.$this->first_name.' '.$this->last_name.'</a>'
+          <a href="#" class="user">'.ucfirst($this->first_name).' '.ucfirst($this->last_name).'</a>'
           .($post['group_name']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
           <br><a  class="time">'.G::time_elapsed_string($post['post_date']).'</a>
@@ -224,7 +224,7 @@ class Profile extends Navbar{
                     <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
                     <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
                     class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
-                    <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
+                    <a href="#" class="user">'.ucfirst($comment['first_name']).' '.ucfirst($comment['last_name']).'</a>
                     </div>
                     <div class="output">'.$comment['body'].'</div>
                     <div class="comment_footer" style="margin-left:50px;">

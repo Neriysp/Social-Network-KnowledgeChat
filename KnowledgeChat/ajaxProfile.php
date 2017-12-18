@@ -64,10 +64,9 @@ if(isset($_POST["action"]))
         {
             if($_FILES["profile_photo"]["error"]===0){
                     if($_FILES["profile_photo"]["size"]<1000000){
-            $image = Sanitize::prepDb((file_get_contents($_FILES["profile_photo"]["tmp_name"])),$mysqli);
+            $image =$mysqli->escape_string(file_get_contents($_FILES["profile_photo"]["tmp_name"]));
 
-
-            $mysqli->query("Update t_users set prof_image ='$image' where id=$user_id");
+            $mysqli->query("UPDATE t_users set prof_image ='$image' where id=$user_id");
             
             echo json_encode('data:image/jpeg;base64,'.base64_encode(file_get_contents($_FILES["profile_photo"]["tmp_name"])));
                     }else{

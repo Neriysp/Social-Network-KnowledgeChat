@@ -16,9 +16,10 @@ class Group extends Navbar{
     private $resultRequest;
     private $eventHistory;
     private $nextEventResult;
+    private $visitor_user_id;
 
      public function __construct($_name,$conn,$_description,$_topic,$_type,$_image,$_isGroupAdmin,$_isPartofGroup
-     ,$_firstName,$_lastName,$_profile_pic){
+     ,$_firstName,$_lastName,$_profile_pic,$_user_id){
 
         $this->group_name=$_name;
         $this->mysqli=$conn;
@@ -30,7 +31,8 @@ class Group extends Navbar{
         $this->isPartofGroup=$_isPartofGroup;
         $this->visitor_firstName=ucfirst($_firstName);
         $this->visitor_lastName=ucfirst($_lastName);
-        $this->visitor_profile_pic=$_profile_pic; 
+        $this->visitor_profile_pic=$_profile_pic;
+        $this->visitor_user_id=$_user_id;
     }
 
      public function getGroupHeader(){
@@ -152,7 +154,7 @@ class Group extends Navbar{
           $posts_html .='<div class="card">'
           .($post['prof_image']!=null ?
           '<img src="data:image/jpeg;base64,'.base64_encode($post['prof_image']).'" id="main_pic" class="img-profile profile_picture">':'').'
-          <a href="#" class="user">'.$post['first_name'].' '.$post['last_name'].'</a>'
+          <a href="#" class="user">'.ucfirst($post['first_name']).' '.ucfirst($post['last_name']).'</a>'
           //TODO:Kjo do te jete per eventin ne te cilin po e ben kete postim
           .($post['event_id']!=null ?
           ' on <a href="#" class="friend">'.$post['group_name'].'</a> group.':'').'
@@ -213,7 +215,7 @@ class Group extends Navbar{
                     <input type="hidden" name="post_id" class="" value="'.$comment['comm_id'].'" />
                     <div class="prof_img"><img src="data:image/jpeg;base64,'.base64_encode($comment['prof_image']).'"
                     class="img-profile profile_picture" style="width:35px;height:35px;margin-top:3px;">
-                    <a href="#" class="user">'.$comment['first_name'].' '.$comment['last_name'].'</a>
+                    <a href="#" class="user">'.ucfirst($comment['first_name']).' '.ucfirst($comment['last_name']).'</a>
                     </div>
                     <div class="output">'.$comment['body'].'</div>
                     <div class="comment_footer" style="margin-left:50px;">
@@ -284,7 +286,8 @@ class Group extends Navbar{
 
        while($user=mysqli_fetch_array($result)){
             $sidebarHtml.=' <li><a href=profile.php?user='.$user['id_user']
-            .'><img src="data:image/jpeg;base64,'.base64_encode($user['prof_image']).'" class="prof_req_photo_chat">'.$user['first_name'].' '.$user['last_name'].'</a></li>';
+            .'><img src="data:image/jpeg;base64,'.base64_encode($user['prof_image']).'" class="prof_req_photo_chat">'
+            .ucfirst($user['first_name']).' '.ucfirst($user['last_name']).'</a></li>';
         }
         $sidebarHtml.='</ul>';
 
@@ -306,23 +309,23 @@ class Group extends Navbar{
                                           where t_events.group_name='$this->group_name'");
         if($result->num_rows>0){
             while($event=mysqli_fetch_array($result)){
-                if($event['state']=="progress"){
+                if($event['state']=="inProgress"){
                     $eventHtml.='<b>Task:</b>'.$event['task'].'
             <div id="created_date" class="time">'.G::time_elapsed_string($event['event_date']).'</div></div>
             <div id="difficulty_event"><b>Difficulty:</b>
             <span style="background-color:'.($event['difficulty']=="medium"?'yellow':($event['difficulty']=="hard"?'red':'green')).'">
             '.ucfirst($event['difficulty']).'</span></div> 
-            <div id="suggested_by"><a href="profile.php?user='.$event['suggested_by'].'">Suggested by:'.$event['first_name']
-            .' '.$event['last_name'].'</a></div>
-            '.($this->isGroupAdmin?'<button class="complete_event">Complete Event</button>':
-            '<button class="mark_event_done">Mark as done</button>').'</div>';
+            <div id="suggested_by"><a href="profile.php?user='.$event['suggested_by'].'">Suggested by:'.ucfirst($event['first_name'])
+            .' '.ucfirst($event['last_name']).'</a></div>
+            '.($this->isGroupAdmin?'<button onclick="markEventDone()" class="complete_event">Complete Event</button>':
+                '<button  class="mark_event_done">Mark as done</button>').'</div>';
                 }else{
                     $historyEventHtml.='
                     <li><div class="task"><b>Task: </b>'.$event['task'].'</div><div class="difficulty"><b>Difficulty:</b>
                     <span style="background-color:'.($event['difficulty']=="medium"?'yellow':($event['difficulty']=="hard"?'red':'green')).'">
                     '.ucfirst($event['difficulty']).'</span></div>
-                    <div class="suggested_by"><a href="profile.php?user='.$event['suggested_by'].'">Suggested by:'.$event['first_name']
-                     .' '.$event['last_name'].'</a></div>
+                    <div class="suggested_by"><a href="profile.php?user='.$event['suggested_by'].'">Suggested by:'.ucfirst($event['first_name'])
+                     .' '.ucfirst($event['last_name']).'</a></div>
                     </li>';
                 }
             }
@@ -334,15 +337,73 @@ class Group extends Navbar{
             </div>';
         }
         $this->eventHistory=$historyEventHtml;
+
         $nextEventVoteHtml='
         <div class="next_event_vote">
             <div class="create_post">
             <p><i class="fa fa-plus" aria-hidden="true"></i>  Next event vote</p>
-            </div>
-        <button class="event_history" data-popup-open="popup-eventHistory">Event history</button>
+        </div>
+         <ul class="next_event_suggestions_posted">';
+
+        $result=$this->mysqli->query("SELECT * from t_next_event
+                                      join t_users on t_users.id=t_next_event.user_id 
+                                      where group_name='$this->group_name'");
+         
+        $res=$this->mysqli->query("SELECT * from t_new_event_vote where
+                                   user_id=$this->visitor_user_id");
+
+
+             $hashSet = array();
+             while($votePerEvent=mysqli_fetch_array($res)){
+                $hashSet[$votePerEvent['event_suggestion_id']]=$votePerEvent['vote'];
+             }
+         
+        if($result->num_rows>0){
+            while($nextEvent=mysqli_fetch_array($result)){
+                $nextEventVoteHtml.='<li class="parent_sugg"><div class="task"><b>Task: </b>'.$nextEvent['task'].'</div><div class="difficulty"><b>Difficulty:</b>
+                    <span style="background-color:'.($nextEvent['difficulty']=="medium"?'yellow':($nextEvent['difficulty']=="hard"?'red':'green')).'">
+                    '.ucfirst($nextEvent['difficulty']).'</span></div>
+                    <div id="suggestion_action_btn">
+                    '.$this->getVoteForEvent($nextEvent['id_next_event'],$hashSet).'
+                    <input type="hidden" name="id_next_event" id="id_next_event" value="'.$nextEvent['id_next_event'].'" />  
+                     </div>
+                    <div class="suggested_by_sug"><a href="profile.php?user='.$nextEvent['user_id'].'">Suggested by:'.ucfirst($nextEvent['first_name'])
+                     .' '.ucfirst($nextEvent['last_name']).'</a></div>
+                    </li>';
+            }
+        
+        }
+
+         $nextEventVoteHtml.='</ul><button class="event_history" data-popup-open="popup-eventHistory">Event history</button>
         <button class="suggest_main_event" data-popup-open="popup-suggestEvent">Suggest next event</button>
         </div>';
         echo $eventHtml.$nextEventVoteHtml;
+    }
+
+    public function getVoteForEvent($idEvent,$hashSet){
+    
+        $votingButtonHtml='
+         <a  class="upVoteEvent" style="font-size: 30px;padding:10px;" onclick="upVote(event)"><i  class="fa fa-thumbs-up icon-large ThumbUp" aria-hidden="true"></i></a>
+         <a  class="downVoteEvent" style="font-size: 30px;padding:10px;"  onclick="downVote(event)"><i  class="fa fa-thumbs-down icon-4x ThumbDown" aria-hidden="true"></i></a> 
+         ';
+
+            if(array_key_exists($idEvent,$hashSet)){
+                if($hashSet[$idEvent]=='up'){
+                    $votingButtonHtml='
+                    <a  class="upVoteEvent" style="font-size: 30px;padding:10px;" onclick="upVote(event)"><i  class="fa fa-thumbs-up icon-large ThumbUp clicked" aria-hidden="true"></i></a>
+                    <a  class="downVoteEvent" style="font-size: 30px;padding:10px;"  onclick="downVote(event)"><i  class="fa fa-thumbs-down icon-4x ThumbDown" aria-hidden="true"></i></a> 
+                    ';
+                }
+                else{
+                    $votingButtonHtml='
+                    <a  class="upVoteEvent" style="font-size: 30px;padding:10px;" onclick="upVote(event)"><i  class="fa fa-thumbs-up icon-large ThumbUp" aria-hidden="true"></i></a>
+                    <a  class="downVoteEvent" style="font-size: 30px;padding:10px;"  onclick="downVote(event)"><i  class="fa fa-thumbs-down icon-4x ThumbDown clicked" aria-hidden="true"></i></a> 
+                    ';
+                }
+
+        }
+
+        return $votingButtonHtml;
     }
 
     public function getPopupEventHistory(){
@@ -394,12 +455,13 @@ class Group extends Navbar{
                      <button  onclick="rejectSug(event)">Reject</button> 
                      <input type="hidden" name="event_suggestion_id" id="event_suggestion_id" value="'.$event['id_event_suggestion'].'" />  
                      </div>
-                    <div class="suggested_by_sug"><a href="profile.php?user='.$event['user_id'].'">Suggested by:'.$event['first_name']
-                     .' '.$event['last_name'].'</a></div>
+                    <div class="suggested_by_sug"><a href="profile.php?user='.$event['user_id'].'">Suggested by:'.ucfirst($event['first_name'])
+                     .' '.ucfirst($event['last_name']).'</a></div>
                     </li>';
             }
 
-                $nextEventSuggestionsHtml.='<a class="popup-close" data-popup-close="popup-nextEventSuggestions" href="#">x</a>
+                $nextEventSuggestionsHtml.='</ul>
+                <a class="popup-close" data-popup-close="popup-nextEventSuggestions" href="#">x</a>
             </div>
     </div>';
 

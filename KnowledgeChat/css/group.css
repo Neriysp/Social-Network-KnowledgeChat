@@ -531,25 +531,30 @@
             display: inline-block;
             margin-left: 10px;
         }
-        
         .event_history_data li:first-child,
         .next_event_suggestions li:first-child {
             border-top: none;
         }
-        
         .event_history_data li,
         .next_event_suggestions li {
             padding: 10px;
             border-top: 1px solid #e5e5e5;
             position: relative;
         }
-        
+        .next_event_suggestions_posted li{
+            padding: 10px;
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
         .event_history_data,
         .next_event_suggestions {
             overflow: auto;
             max-height: 55vh;
         }
-        
+        .next_event_suggestions_posted{
+            overflow: auto;
+            max-height: 16vh;
+        }
         .suggested_by {
             display: inline-block;
             position: absolute;
@@ -611,4 +616,7 @@
         .suggested_by_sug:hover {
             color: #5d88d8;
             cursor: pointer;
+        }
+        .clicked{
+            color:rgb(64, 128, 255);
         }
